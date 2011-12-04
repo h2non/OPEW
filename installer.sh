@@ -28,8 +28,6 @@
 # THIS CODE IS NOT ENDED AND STILL BETA
 #
 
-echo $0
-
 # config variables
 LOG="/opt/opew.log"
 OPEW="/opt/opew"
@@ -78,11 +76,12 @@ function _testenv(){
 	# test 64 bits support
 	if  [ ! $(uname -m | grep '_64') ]; then
 		echo "ERROR: "
-		echo "OPEW only supports 64 bits compatible OS."
-		echo "You can't continue with the installation..."
+		echo "OPEW only supports 64 bits compatible operative system."
+		echo "Can't continue with the installation process..."
 		exit 1
 	fi
 	echo "OK: 64 bits support"
+
 	# check if run as root
 	if test "`id -u`" -ne 0
 	then
@@ -91,6 +90,7 @@ function _testenv(){
         	exit 1
 	fi
 	echo "OK: running as root"
+
 	# check if opew native path is valid
 	if [ -d "/opt/opew" ] && [ -d "/opt/opew/stack" ] ; then
 		echo "NOTE: "
@@ -98,7 +98,7 @@ function _testenv(){
 		echo "The new OPEW installation needs '/opt/opew' path free to work "
 		echo "You should move the old OPEW stack to other location to continue with the new installation"
 		echo " "
-		read -p "Do you want to stop all the services running at the OPEW old installation: (y/n)" response
+		read -p "Do you want to stop all the services running at the OPEW old installation?: (y/n)" response
 		if [ $response = "y" ] || [ $response = "Y" ]; then
 			if [ ! -x "/opt/opew/scripts/opew" ]; then
 				_die "Can't ejecute the OPEW script to stop the services. Can't continue... "
@@ -137,10 +137,11 @@ function _testenv(){
                                 _die "Can't ejecute the OPEW script to stop the services. Can't continue... "
                         fi
                         echo "Stoping old OPEW installation services..."
-                        /opt/opew/scripts/opew stop >> $0/debug.log
+                        /opt/opew/scripts/opew stop >> "$PWD/opew-install-debug.log"
                 fi
+
 		echo " "
-                read -p "You wanna remove the symbolic link to the old OPEW installation (just the symbolic link): (y/n) " response
+                read -p "Do you wanna remove the symbolic link to the old OPEW installation (just the symbolic link)?: (y/n) " response
                 if [ $response = "y" ] && [ $response = "Y"]; then
                         if [ test ! `rm /opt/opew` ]; then
                                 _die "Cannot remove the symbolic link to the old OPEW installation path. Can't continue... "
