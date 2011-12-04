@@ -34,18 +34,19 @@ OPEW="/opt/opew"
 
 function _welcome(){
 	clear
-	echo "########################################"
-	echo "             WELCOME TO OPEW "
-	echo "########################################"
+	echo "#############################################"
+	echo "     OPEW - Open Web Development Stack " 
+	echo "#############################################"
 	echo " "
-	echo "This script will be install OPEW on this machine"
-	echo "You can take a look at the code behing at: "
+	echo "This script will install OPEW in this system" 
+	echo "This installer will check and prepare the system properly"
+	echo " "
+	echo "You can take a look at the code of this shell script at: "
 	echo "http://github.com/h2non/opew/installer.sh "
 	echo " "
 	echo "OPEW is a complete, independent and extensible open distribution stack for GNU/Linux based OS."
 	echo "Its goal is to provides an easy and portable ready-to-run development environment focused on modern web programming languages. " 
 	echo "You can read more from project page: http://opew.sourceforge.net"
-	echo " "
 	echo " "
 }
 
@@ -55,15 +56,14 @@ function _die(){
 }
 
 function _requeriments(){
-	echo " ENVIRONMENT REQUERIMENTS:"
+	echo "OPEW minimal requeriments:"
 	echo " "
 	echo "* x64 based (64 bits) compatible processor"
 	echo "* Minimum of 256 MB of RAM"
-	echo "* Minimum of 1024 MB of hard disk capacity"
+	echo "* Minimum of 1024 MB of hard disk available space"
 	echo "* At once a mininal GNU/Linux based OS"
 	echo "* TCP/IP protocol support" 
 	echo "* Root access level"
-	echo " "
 	echo " "
 	read -p "Press any key to continue... "
 }
@@ -91,14 +91,21 @@ function _testenv(){
 	fi
 	echo "OK: running as root"
 
+	# check if /opt dir exists 
+	if [ ! -d "/opt" ]; then
+		echo "NOTE: seems the /opt directory don't exists..., so, the installer will create the directory /opt"
+		`mkdir /opt`
+	fi
+	
 	# check if opew native path is valid
-	if [ -d "/opt/opew" ] && [ -d "/opt/opew/stack" ] ; then
+	if [ -d "/opt/opew" ] && [ -d "/opt/opew/stack" ]; then
+		echo " "
 		echo "NOTE: "
 		echo "Detected another OPEW installation located in '/opt/opew' "
 		echo "The new OPEW installation needs '/opt/opew' path free to work "
 		echo "You should move the old OPEW stack to other location to continue with the new installation"
 		echo " "
-		read -p "Do you want to stop all the services running at the OPEW old installation?: (y/n)" response
+		read -p "Do you want to stop all the services running at the OPEW old installation?: (y/n) " response
 		if [ $response = "y" ] || [ $response = "Y" ]; then
 			if [ ! -x "/opt/opew/scripts/opew" ]; then
 				_die "Can't ejecute the OPEW script to stop the services. Can't continue... "
@@ -107,31 +114,42 @@ function _testenv(){
 			/opt/opew/scripts/opew stop >> "$0.debug.log"
 			STOPED=1
 		fi
-		
+
 		echo " "
 		read -p "You wanna move the old OPEW to new location (p.e '/opt/opew_old'): (y/n) " response
-		if [ $response = "y" ] && [ $response = "Y"]; then
-			if [ test ! `rm /opt/opew` ]; then
-				_die "Cannot remove the symbolic link to the old OPEW installation path. Can't continue... "
-			else 
-				echo "Symbolic link removed successfully. Can continue the installation process..."
-			fi
+		if [ $response = "y" ] || [ $response = "Y"]; then
+			while : ; do
+                        read -p "Please, enter the new location to move the old OPEW installation: " response
+	                if [ -z $respone ] && [ -d $response ]; then
+                                echo "Invalid path or the directory already exists. Enter a new valid path... (CTRL+C to exit): "
+                                echo " "
+                        else
+        			if [ ! `mv /opt/opew $respone` ]; then
+				_die "Cannot move the old OPEW installation to link to the old OPEW installation path. Can't continue... "
+	                	else
+					echo "Symbolic link removed successfully. Can continue the installation process..."
+				fi
+				break
+                        fi
+              		done
 		else
-			echo " "
+			_die "Can't continue. Move or delete the old OPEW installation from '/opt/opew' to continue... "
 		fi
 	else
 		echo "OK: the installation path is available to be used by default"
 	fi
-	 
+	echo " " 
+
 	# check if symbolic link already exists
 	if [ -h "/opt/opew" ]; then
+		echo " "
 		echo "NOTE: "
 		echo "Seems already exists another OPEW installation with a custom path: " 
 		echo `ls -ali /opt/ | grep "opew ->"`
 		echo "Take into account the new installation will make non-operative the old OPEW installation."
-		echo "Is recomendable to stop all the services running at the old OPEW stack before continue with the new installation. "
+		echo "You should stop all of the services running at the old OPEW stack before continue with the new installation. "
 		echo " "
-                read -p "Do you want to stop all the services running at the OPEW old installation: (y/n)" response
+                read -p "Do you want automatically stop all the services running at the OPEW old installation: (y/n) " response
                 if [ $response = "y" ] || [ $response = "Y" ]; then
                         if [ ! -x "/opt/opew/scripts/opew" ]; then
                                 _die "Can't ejecute the OPEW script to stop the services. Can't continue... "
@@ -141,16 +159,22 @@ function _testenv(){
                 fi
 
 		echo " "
-                read -p "Do you wanna remove the symbolic link to the old OPEW installation (just the symbolic link)?: (y/n) " response
+                read -p "Do you want automatically remove the symbolic link to the old OPEW installation (just the symbolic link)?: (y/n) " response
                 if [ $response = "y" ] && [ $response = "Y"]; then
                         if [ test ! `rm /opt/opew` ]; then
                                 _die "Cannot remove the symbolic link to the old OPEW installation path. Can't continue... "
                         else
                                 echo "Symbolic link removed successfully. Can continue the installation..."
                         fi
-                fi
+                else
+			echo "Remove manually the symbolic link at '/opt/opew' path and try again to install OPEW"
+			exit
+		fi
 		OLD=1
+	else 
+		echo "OK: don't found confluency with old OPEW installations."
 	fi
+
 	echo " "
 	echo "All test passed succesully "
 	echo "########################################"
@@ -164,6 +188,7 @@ function _preinstall(){
 	echo "Pre-installation steps - 1. Installation path "
 	echo " "
 	echo "OPEW will be installed by default in '/opt/opew'"
+	echo "NOTE: if install in /opt/opew, be sure have more than 1024MB of free space at /opt (maybe are inside disk partition)"
 	read -p "You wanna define an alternative installation path: (y/n) " response
 	case $response in
 		y|Y)
@@ -182,7 +207,6 @@ function _preinstall(){
 		;;
 	esac
 }
-
 
 function _usersinstall(){
 	echo " "
