@@ -1,3 +1,0 @@
-/opt/opew/stack/apache2/scripts/ctl.sh : apache not running
-/opt/opew/stack/mysql/scripts/ctl.sh : mysql not running
-/opt/opew/stack/postgresql/scripts/ctl.sh : postgresql not running
