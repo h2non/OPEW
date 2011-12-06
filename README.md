@@ -25,4 +25,12 @@ This is the public git code repository of the OPEW project.
 
 All the code developed for the OPEW project should stay here free-open sourced.
 
-Take a look at the [project site](http://opew.sourceforge.net) for more information and download OPEW
+Take a look at the [project site](http://opew.sourceforge.net) for more information and documentation
+
+# Download
+
+You can download the last OPEW release (beta) from:
+http://sourceforge.net/projects/opew/files/latest/download
+
+Take into account OPEW is a beta experimental version.
+An improved new release with all feature is coming soon... keep updated.
