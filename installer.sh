@@ -1,11 +1,11 @@
 #!/bin/bash
 #
-# OPEW installer shell script
-# This is a part of OPEW project <http://opew.sourceforge.net>
+# OPEW auto-installer shell script
+# This is a part of the OPEW project <http://opew.sourceforge.net>
 #
 # @license	GNU GPL 3.0
 # @author	Tomas Aparicio <tomas@rijndael-project.com>
-# @version	1.0 - 06/12/2011
+# @version	1.0 beta - 10/12/2011
 #
 # Copyright (C) 2011 - Tomas Aparicio
 #
@@ -30,7 +30,8 @@
 
 # config variables
 LOG="$PWD/opew-install.log"
-OPEW="/opt/opew"
+OPEW="/opt/-opewtest"
+LINES=72810
 
 # check PATH environment variable
 if [ -z $PATH ]; then
@@ -54,15 +55,19 @@ function _welcome(){
 	echo "     OPEW - Open Web Development Stack " 
 	echo "#############################################"
 	echo " "
-	echo "This script will install OPEW in this system ("`hostname`")" 
-	echo "This installer will check and prepare the system properly"
+	echo "OPEW is a complete, independent and extensible open distribution stack for GNU/Linux based OS."
+        echo "Its goal is to provides an easy and portable ready-to-run development environment focused on modern web programming languages. "
+        echo "You can read more at the project page: http://opew.sourceforge.net"
 	echo " "
-	echo "You can take a look at the shell script code of this installer at: "
+	echo "This script (1.0 beta) will install OPEW in this system ("`hostname`")" 
+	echo "This installer will check and prepare the system properly before install"
+	echo " "
+	echo "* You can take a look at the shell script code of this installer at: "
 	echo "http://github.com/h2non/opew/installer.sh "
 	echo " "
-	echo "OPEW is a complete, independent and extensible open distribution stack for GNU/Linux based OS."
-	echo "Its goal is to provides an easy and portable ready-to-run development environment focused on modern web programming languages. " 
-	echo "You can read more at the project page: http://opew.sourceforge.net"
+	echo "* Also, if you experiment any issue during the execution, please report it here:"
+	echo "http://github.com/h2non/opew/issues"
+	echo " "
 	echo " "
 }
 
@@ -243,7 +248,7 @@ function _preinstall(){
 	echo "NOTE: if install in /opt/opew, be sure have more than 1024MB of free space at /opt (maybe are inside in a separete disk partition)"
 	read -p "You wanna define an alternative installation path: (y/n) " response
 	case $response in
-		y|Y)
+		y|Y|yes|Yes|YES)
 		while : ; do
 			read -p "Please, enter the absolute new path: " newpath
 			if [ -z $newpath ] && [ -d $newpath ]; then
@@ -264,7 +269,7 @@ function _preinstall(){
 }
 
 function _usersinstall(){
-	echo "Installation step - 2. Creating system users and groups"
+	echo "Installation step - 3. Creating system users and groups"
 	echo " "
 	echo "OPEW includes packages like Apache HTTP Server, MySQL and PostgreSQL DBMS thats by technical requeriments and security recomendations"
 	echo "needs to works with custom OS users with his own privileges."
@@ -281,11 +286,111 @@ function _usersinstall(){
 }
 
 function _license(){
-	echo "#########################################"
 	echo " "
-	echo "OPEW is licensed under the GNU GPL 3.0 public license: "
+	echo "Installation step - 2. License agreement"
+	echo " "
+	echo "OPEW include a lot of diferent packages and programming languages with his respective license."
+	echo "You can see the all packages licenses at /opt/opew/licenses/ once OPEW will be installed. "
+	echo "OPEW project and his native code included of the authors or contributors is licensed under the GNU GPL 3.0 public license (if not see the code header). You can read it at /opt/opew/LICENSE"
+	echo " "
+	read  -p "You accept the respetive packages licenses and the OPEW license?: (y/n) " response
+	 case $response in
+                y|Y|yes|Yes|YES)
+                	echo "OK: continuning with the next installation step..."
+			echo " "
+                ;;
+                *)
+                echo " "
+                echo "You must accept the terms. Can't continue. "
+                echo " "
+		exit 1
+                ;;
+        esac
 	echo " "
 	# TODO
+}
+
+function _doinstall(){
+
+	#
+	# TODO....
+	# 
+
+	echo " "
+	echo "####################################"
+	echo "OPEW is ready to be installed."
+	echo " " 
+	read -p "Do you want to proceed finally installing OPEW in this system? (y/n): " response
+	case $response in
+                y|Y|yes|Yes|YES)
+		        echo "OK: continuning with the next installation step..."
+                        echo " "
+                ;;
+                *)
+                echo " "
+                echo "You select NO. Exiting from the installer. "
+                echo " "
+                exit 
+                ;;
+        esac
+
+	echo "OPEW is installing, this process may take some minutes depeding of the hardware resources"
+	echo " "
+
+	# get final line with regex
+	SKIP=`awk '/^###DATA###/ {print NR + 1; exit 0; }' $0`
+	# tail from final and start uncompress
+	tail -n +$SKIP $0 | tar xvz -C $OPEW >> $LOG &
+
+	if _cexists wc && _cexists awk ; then 
+
+	# process percentage info
+	percent="1%"
+	perbar="#"
+	nlines=`wc -l $LOG | awk '{ print $1; }'`
+	pernumlast=-1
+
+	while : ; do
+
+		pernum=$(expr $(expr $nlines \* 50) / $LINES)
+		pernum=`awk 'BEGIN { rounded = sprintf("%.0f", '$pernum'); print rounded }'`
+		count=0
+		percent=$(expr $(expr $pernum \* 2) + 1)"% completed"
+		
+		while [ $count -lt $pernum ]; do
+			count=`expr $count + 1`
+			perbar="$perbar#"
+		done
+ 
+		if [ $pernum -ne $pernumlast ]; then
+			echo "$perbar $percent"
+			#echo -ne $perbar
+		fi
+
+		sleep 2
+		perbar=""
+		pernumlast=$pernum
+		nlines=`wc -l $LOG | awk '{ print $1; }'`
+		if [ $nlines -ge $LINES ]; then
+                        break
+                fi
+	done
+	fi
+
+	sleep 2
+	echo " "
+	echo "Congratulations, OPEW was installed succesfully!"
+	echo " "
+	echo "Take a look the README file located in $OPEW for getting started."
+	echo "The complete OPEW documentation is online available via:"
+	echo "http://opew.sourceforge.net/docs"
+	echo " "
+	echo "Enjoy it!"
+}
+
+function _postinstall(){
+	echo " "
+	# TODO...
 }
 
 # run welcome function
@@ -296,10 +401,15 @@ _requeriments
 _testenv
 # run the preinstall process
 _preinstall
-# run usersinstall process
-_usersinstall
 # show license agregement
 _license
+# run usersinstall process
+_usersinstall
 # finally install
 _doinstall
 # TODO
+#_postinstall
+
+exit 0
+
+###DATA###
