@@ -71,7 +71,6 @@ function _welcome(){
 	echo "* Also, if you experiment any issue during the execution, please report it here:"
 	echo "http://github.com/h2non/opew/issues"
 	echo " "
-	echo " "
 }
 
 function _die(){
@@ -98,9 +97,7 @@ function _requirements(){
 
 function _testenv(){
 	echo " "
-	echo "############################################"
-	echo " "
-	echo "Testing requirements..."
+	echo "Testing system requirements..."
 	echo " "
 
 	# test 64 bits support
@@ -132,14 +129,14 @@ function _testenv(){
 		if ! _cexists $i ; then
 			echo " "
 			echo "ERROR:"
-			echo "The binary tool '$i' not was found in the system (using PATH env variable)"
-			echo "Install it and try again with the installation"
+			echo "The binary tool '$i' not found in the system (using PATH env variable)"
+			echo "Install '$i' via your package manager and try again with the installation"
 			echo " "
 			ERROR=1
 		fi
 	done
 	if [ $ERROR -ne 1 ]; then
-		echo "OK: binary tools was found"
+		echo "OK: binary tools found"
 	else 
 		_die "Cannot continue with the installation process..."
 	fi
