@@ -32,6 +32,7 @@
 LOG="$PWD/opew-install.log"
 OPEW="/opt/-opewtest"
 LINES=72810
+ERROR=0
 
 # check PATH environment variable
 if [ -z $PATH ]; then
@@ -62,7 +63,9 @@ function _welcome(){
 	echo "This script (1.0 beta) will install OPEW in this system ("`hostname`")" 
 	echo "This installer will check and prepare the system properly before install"
 	echo " "
-	echo "* You can take a look at the shell script code of this installer at: "
+	echo "* You can take a look at the script code behind this installer typing on the shell: "
+	echo "$ vi $0 | head -n 395"
+	echo "Or via web from the public Git repository: "
 	echo "http://github.com/h2non/opew/installer.sh "
 	echo " "
 	echo "* Also, if you experiment any issue during the execution, please report it here:"
@@ -80,8 +83,8 @@ function _cexists () {
     type "$1" &> /dev/null ;
 }
 
-function _requeriments(){
-	echo "OPEW minimal requeriments:"
+function _requirements(){
+	echo "OPEW minimal requirements:"
 	echo " "
 	echo "* x64 based (64 bits) compatible processor"
 	echo "* Minimum of 256 MB of RAM"
@@ -90,14 +93,16 @@ function _requeriments(){
 	echo "* TCP/IP protocol support" 
 	echo "* Root access level"
 	echo " "
-	read -p "Press any key to continue... "
+	read -p "Press enter to continue... "
 }
 
 function _testenv(){
 	echo " "
 	echo "############################################"
-	echo "Testing requeriments..."
 	echo " "
+	echo "Testing requirements..."
+	echo " "
+
 	# test 64 bits support
 	if  [ ! $(uname -m | grep '_64') ]; then
 		echo "ERROR: "
@@ -108,8 +113,7 @@ function _testenv(){
 	echo "OK: 64 bits support"
 
 	# check if run as root
-	if test "`id -u`" -ne 0
-	then
+	if [ "`id -u`" -ne 0 ];	then
         	echo "ERROR: "
 		echo "The installer must be ran like root user. Can't continue..."
         	exit 1
@@ -122,11 +126,27 @@ function _testenv(){
 		`mkdir /opt`
 	fi
 
-	# 
+	# verify bin tools for used by the installer script
+	for i in $(echo "awk;head;tail;wc;tar" | tr ";" "\n")
+	do
+		if ! _cexists $i ; then
+			echo " "
+			echo "ERROR:"
+			echo "The binary tool '$i' not was found in the system (using PATH env variable)"
+			echo "Install it and try again with the installation"
+			echo " "
+			ERROR=1
+		fi
+	done
+	if [ $ERROR -ne 1 ]; then
+		echo "OK: binary tools was found"
+	else 
+		_die "Cannot continue with the installation process..."
+	fi
+	ERROR=0
 
 	# check system RAM capacity
-	# hash foo 2>&- || { echo >&2 'not exists'; exit 1; }
-	if _cexists free && _cexists awk ; then
+	if _cexists free ; then
 	if [ $(free -t -m | grep 'Mem:' | awk '{ print $2 }') -le 255 ]; then
 		echo " "
 		echo "ALERT:"
@@ -229,14 +249,11 @@ function _testenv(){
 		echo "OK: don't found confluency with old OPEW installations"
 		echo "OK: the installation path is available to be used by default"
 	fi
-	echo " " 
 
 	echo " "
-	echo "All test passed succesully "
+	echo "All requirements passed succesully "
 	echo " "
-	echo "###########################################"
-	echo " "
-	read -p "Press any key to continue... "
+	read -p "Press enter to continue... "
 }
 
 function _preinstall(){
@@ -246,7 +263,8 @@ function _preinstall(){
 	echo " "
 	echo "OPEW will be installed by default in '/opt/opew'"
 	echo "NOTE: if install in /opt/opew, be sure have more than 1024MB of free space at /opt (maybe are inside in a separete disk partition)"
-	read -p "You wanna define an alternative installation path: (y/n) " response
+	echo " "
+	read -p "You wanna define an alternative installation path? (y/n): " response
 	case $response in
 		y|Y|yes|Yes|YES)
 		while : ; do
@@ -265,13 +283,14 @@ function _preinstall(){
 		echo " "
 		;;
 	esac
-	echo "##########################################"
 }
 
 function _usersinstall(){
-	echo "Installation step - 3. Creating system users and groups"
 	echo " "
-	echo "OPEW includes packages like Apache HTTP Server, MySQL and PostgreSQL DBMS thats by technical requeriments and security recomendations"
+	echo "##########################################"
+	echo "Installation step - 3. System users and groups"
+	echo " "
+	echo "OPEW includes packages like Apache HTTP Server, MySQL and PostgreSQL DBMS thats by technical requirements and security recomendations"
 	echo "needs to works with custom OS users with his own privileges."
 	echo "Is order to work properly with these packages, OPEW installer will create the following users and groups at this system:"
 	echo " "
@@ -281,12 +300,12 @@ function _usersinstall(){
 	echo "opew_httpd (Apache HTTP server user and group)"
 	echo " "
 
-	echo "##########################################"
 	# TODO
 }
 
 function _license(){
 	echo " "
+	echo "##########################################"
 	echo "Installation step - 2. License agreement"
 	echo " "
 	echo "OPEW include a lot of diferent packages and programming languages with his respective license."
@@ -311,20 +330,16 @@ function _license(){
 }
 
 function _doinstall(){
-
-	#
-	# TODO....
-	# 
-
 	echo " "
-	echo "####################################"
+	echo "##############################################"
+	echo "Installation step - 3. Install files." 
+	echo " " 
 	echo "OPEW is ready to be installed."
 	echo " " 
 	read -p "Do you want to proceed finally installing OPEW in this system? (y/n): " response
 	case $response in
                 y|Y|yes|Yes|YES)
 		        echo "OK: continuning with the next installation step..."
-                        echo " "
                 ;;
                 *)
                 echo " "
@@ -333,7 +348,7 @@ function _doinstall(){
                 exit 
                 ;;
         esac
-
+	echo " "
 	echo "OPEW is installing, this process may take some minutes depeding of the hardware resources"
 	echo " "
 
@@ -342,8 +357,6 @@ function _doinstall(){
 	# tail from final and start uncompress
 	tail -n +$SKIP $0 | tar xvz -C $OPEW >> $LOG &
 
-	if _cexists wc && _cexists awk ; then 
-
 	# process percentage info
 	percent="1%"
 	perbar="#"
@@ -351,12 +364,11 @@ function _doinstall(){
 	pernumlast=-1
 
 	while : ; do
-
 		pernum=$(expr $(expr $nlines \* 50) / $LINES)
 		pernum=`awk 'BEGIN { rounded = sprintf("%.0f", '$pernum'); print rounded }'`
 		count=0
-		percent=$(expr $(expr $pernum \* 2) + 1)"% completed"
-		
+		percent=$(expr $(expr $pernum \* 2) + 1)"%"
+
 		while [ $count -lt $pernum ]; do
 			count=`expr $count + 1`
 			perbar="$perbar#"
@@ -364,7 +376,6 @@ function _doinstall(){
  
 		if [ $pernum -ne $pernumlast ]; then
 			echo "$perbar $percent"
-			#echo -ne $perbar
 		fi
 
 		sleep 2
@@ -375,29 +386,30 @@ function _doinstall(){
                         break
                 fi
 	done
-	fi
 
 	sleep 2
 	echo " "
-	echo "Congratulations, OPEW was installed succesfully!"
-	echo " "
-	echo "Take a look the README file located in $OPEW for getting started."
-	echo "The complete OPEW documentation is online available via:"
-	echo "http://opew.sourceforge.net/docs"
-	echo " "
-	echo "Enjoy it!"
+	echo "OPEW was installed succesfully!"
 }
 
 function _postinstall(){
 	echo " "
+	echo "############################################"
+	echo "Installation step - 4. Post-install process."
+	echo " "
+	echo "Take a look the README file located in $OPEW for getting started."
+        echo "The complete OPEW documentation is online available via:"
+        echo "http://opew.sourceforge.net/docs"
+        echo " "
+        echo "Enjoy it!"
 	# TODO...
 }
 
 # run welcome function
 _welcome
-# show requeriments message and other stuff
-_requeriments
-# run a basic test requeriments environment to prepare the new OPEW installation
+# show requirements message and other stuff
+_requirements
+# run a basic test requirements environment to prepare the new OPEW installation
 _testenv
 # run the preinstall process
 _preinstall
@@ -408,7 +420,7 @@ _usersinstall
 # finally install
 _doinstall
 # TODO
-#_postinstall
+_postinstall
 
 exit 0
 
