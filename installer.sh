@@ -52,9 +52,9 @@ function _debuglog(){
 
 function _welcome(){
 	clear
-	echo "#############################################"
+	echo "##############################################"
 	echo "     OPEW - Open Web Development Stack " 
-	echo "#############################################"
+	echo "##############################################"
 	echo " "
 	echo "OPEW is a complete, independent and extensible open distribution stack for GNU/Linux based OS."
         echo "Its goal is to provides an easy and portable ready-to-run development environment focused on modern web programming languages. "
@@ -255,7 +255,7 @@ function _testenv(){
 
 function _preinstall(){
 	echo " "
-	echo "##########################################"
+	echo "##############################################"
 	echo "Installation steps - 1. Installation path "
 	echo " "
 	echo "OPEW will be installed by default in '/opt/opew'"
@@ -284,7 +284,7 @@ function _preinstall(){
 
 function _usersinstall(){
 	echo " "
-	echo "##########################################"
+	echo "##############################################"
 	echo "Installation step - 3. System users and groups"
 	echo " "
 	echo "OPEW includes packages like Apache HTTP Server, MySQL and PostgreSQL DBMS thats by technical requirements and security recomendations"
@@ -302,7 +302,7 @@ function _usersinstall(){
 
 function _license(){
 	echo " "
-	echo "##########################################"
+	echo "##############################################"
 	echo "Installation step - 2. License agreement"
 	echo " "
 	echo "OPEW include a lot of diferent packages and programming languages with his respective license."
@@ -346,7 +346,7 @@ function _doinstall(){
                 ;;
         esac
 	echo " "
-	echo "OPEW is installing, this process may take some minutes depeding of the hardware resources"
+	echo "Installing OPEW (this process may take some minutes depeding of the hardware resources)"
 	echo " "
 
 	# get final line with regex
@@ -354,25 +354,26 @@ function _doinstall(){
 	# tail from final and start uncompress
 	tail -n +$SKIP $0 | tar xvz -C $OPEW >> $LOG &
 
+	
 	# process percentage info
-	percent="1%"
 	perbar="#"
 	nlines=`wc -l $LOG | awk '{ print $1; }'`
 	pernumlast=-1
 
 	while : ; do
-		pernum=$(expr $(expr $nlines \* 50) / $LINES)
+		pernum=$((${nlines}*50/${LINES}))
 		pernum=`awk 'BEGIN { rounded = sprintf("%.0f", '$pernum'); print rounded }'`
 		count=0
-		percent=$(expr $(expr $pernum \* 2) + 1)"%"
+		#percent="$((${pernum}*2+1))%"
 
 		while [ $count -lt $pernum ]; do
 			count=`expr $count + 1`
 			perbar="$perbar#"
 		done
- 
+
 		if [ $pernum -ne $pernumlast ]; then
-			echo "$perbar $percent"
+			echo -n "$perbar ($((${pernum}*2+1))%)" 
+			echo -n R | tr 'R' '\r'
 		fi
 
 		sleep 2
@@ -384,7 +385,7 @@ function _doinstall(){
                 fi
 	done
 
-	sleep 2
+	sleep 1
 	echo " "
 	echo "OPEW was installed succesfully!"
 }
@@ -407,13 +408,13 @@ _welcome
 # show requirements message and other stuff
 _requirements
 # run a basic test requirements environment to prepare the new OPEW installation
-_testenv
+#_testenv
 # run the preinstall process
-_preinstall
+#_preinstall
 # show license agregement
-_license
+#_license
 # run usersinstall process
-_usersinstall
+#_usersinstall
 # finally install
 _doinstall
 # TODO
