@@ -1,11 +1,11 @@
 #!/bin/bash
 #
-# OPEW auto-installer shell script
+# OPEW auto-installer bash script
 # This is a part of the OPEW project <http://opew.sourceforge.net>
 #
 # @license	GNU GPL 3.0
 # @author	Tomas Aparicio <tomas@rijndael-project.com>
-# @version	1.0 beta - 10/12/2011
+# @version	1.1 beta - 12/12/2011
 #
 # Copyright (C) 2011 - Tomas Aparicio
 #
@@ -30,6 +30,7 @@
 
 # config variables
 LOG="$PWD/opew-install.log"
+FILES="$PWD/opew-files.log"
 OPEW="/opt/-opewtest"
 LINES=72810
 ERROR=0
@@ -48,6 +49,10 @@ function _debuglog(){
 		rm -f $LOG
 		touch $LOG
 	fi
+	if [ -s $FILES ]; then
+		rm -f $FILES
+		touch $FILES
+	fi 
 }
 
 function _welcome(){
@@ -151,7 +156,7 @@ function _testenv(){
 		echo "OPEW needs at once 256 MB of RAM capacity to work properly, so 512MB is recomended."
 		echo "You can continue with the installation process, but take that into account."
 		echo " "
-		read -p "Press any key to continue... "
+		read -p "Press enter to continue... "
 	else
 		echo "OK: this system have more than 256MB of RAM capatity"
 	fi
@@ -342,7 +347,7 @@ function _doinstall(){
                 echo " "
                 echo "You select NO. Exiting from the installer. "
                 echo " "
-                exit 
+                exit 0 
                 ;;
         esac
 	echo " "
@@ -350,21 +355,19 @@ function _doinstall(){
 	echo " "
 
 	# get final line with regex
-	SKIP=`awk '/^###DATA###/ {print NR + 1; exit 0; }' $0`
+	skip=`awk '/^###DATA###/ {print NR + 1; exit 0; }' $0`
 	# tail from final and start uncompress
-	tail -n +$SKIP $0 | tar xvz -C $OPEW >> $LOG &
+	tail -n +$skip $0 | tar xvz -C $OPEW >> $FILES &
 
-	
 	# process percentage info
 	perbar="#"
-	nlines=`wc -l $LOG | awk '{ print $1; }'`
+	nlines=`wc -l $FILES | awk '{ print $1; }'`
 	pernumlast=-1
 
 	while : ; do
-		pernum=$((${nlines}*50/${LINES}))
-		pernum=`awk 'BEGIN { rounded = sprintf("%.0f", '$pernum'); print rounded }'`
+		#pernum=$((${nlines}*50/${LINES}))
+		pernum=`awk 'BEGIN { rounded = sprintf("%.0f", '$((${nlines}*50/${LINES}))'); print rounded }'`
 		count=0
-		#percent="$((${pernum}*2+1))%"
 
 		while [ $count -lt $pernum ]; do
 			count=`expr $count + 1`
@@ -379,7 +382,7 @@ function _doinstall(){
 		sleep 2
 		perbar=""
 		pernumlast=$pernum
-		nlines=`wc -l $LOG | awk '{ print $1; }'`
+		nlines=`wc -l $FILES | awk '{ print $1; }'`
 		if [ $nlines -ge $LINES ]; then
                         break
                 fi
