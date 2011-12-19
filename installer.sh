@@ -129,7 +129,7 @@ function _testenv(){
 	fi
 
 	# verify bin tools for used by the installer script
-	for i in $(echo "awk;head;tail;wc;tar" | tr ";" "\n")
+	for i in $(echo "awk;head;tail;wc;tar;df" | tr ";" "\n")
 	do
 		if ! _cexists $i ; then
 			echo " "
@@ -160,6 +160,15 @@ function _testenv(){
 	else
 		echo "OK: this system have more than 256MB of RAM capatity"
 	fi
+	fi
+
+	# check /opt has in an indepent partition
+	 if $(df -P --sync | grep "/opt" >> $LOG) ; then
+		echo "OK: the /opt folder has been detected as an independent disk partition."
+		PARTITION=1
+	else
+		echo "OK: the /opt folder hasn't been detected  as an independent partition."
+		PARTITION=0
 	fi
 
 	# check if exists a symbolic link
@@ -275,6 +284,15 @@ function _preinstall(){
 				echo "Invalid path o the directory already exists. Enter a new path... (CTRL+C to exit)"
                                	echo " "
 			else 
+			
+			# check free avaiable space
+			if [ $PARTITION  -eq 0 ]; then
+				SPACE=$(df -P | grep "/" | awk "{print $5}")
+				# TODO...
+			else
+				# TODO...
+			fi
+			
 			break
 			fi 
 		done 
@@ -301,6 +319,20 @@ function _usersinstall(){
 	echo "opew_mysql (MySQL DBMS user and group)"
 	echo "opew_httpd (Apache HTTP server user and group)"
 	echo " "
+
+	echo "Installing users:"
+	# installing groups
+	for i in $(echo "opew;opew-httpd;opew-mysql;opew-postgres" | tr ";" "\n")
+	do
+		# check if user exists
+		grep -i "^$i" /etc/passwd >> $PWD
+		if [ $? -eq 0 ]; then
+        	echo "Existe el usuario"
+		else
+        	echo "NO existe el usuario"
+		fi
+		
+	done
 
 	# TODO
 }
@@ -334,7 +366,7 @@ function _license(){
 function _doinstall(){
 	echo " "
 	echo "##############################################"
-	echo "Installation step - 3. Install files." 
+	echo "Installation step - 4. Install files." 
 	echo " " 
 	echo "OPEW is ready to be installed."
 	echo " " 
@@ -365,7 +397,6 @@ function _doinstall(){
 	pernumlast=-1
 
 	while : ; do
-		#pernum=$((${nlines}*50/${LINES}))
 		pernum=`awk 'BEGIN { rounded = sprintf("%.0f", '$((${nlines}*50/${LINES}))'); print rounded }'`
 		count=0
 
@@ -398,10 +429,41 @@ function _postinstall(){
 	echo "############################################"
 	echo "Installation step - 4. Post-install process."
 	echo " "
+
+	echo "Assingning permissions:"
+	# opew
+	chown -R opew /opt/opew/stack/
+	# apache 
+
+	# mysql
+	
+	# postgresql
+
+	echo " "
 	echo "Take a look the README file located in $OPEW for getting started."
-        echo "The complete OPEW documentation is online available via:"
+        echo "The complete OPEW documentation is online available at:"
         echo "http://opew.sourceforge.net/docs"
         echo " "
+	
+	read -p "Do you want to start the Apache HTTP server? (y/n): " response
+	case $response in
+                y|Y|yes|Yes|YES)
+			 /opt/opew/scripts/services start apache
+                ;;
+                *)
+		echo "You can start the OPEW services running the 'services' script."
+		echo "./opt/opew/scripts/services start <service>"
+		echo " "
+		echo "List of services: "
+		echo "apache - Apache HTTP Server"
+		echo "mysql - MySQL Server"
+		echo "postgresql - PostgreSQL Server"
+		echo "mondodb - MongoDB Server"
+		echo " "
+		echo "See README at '/opt/opew/' for more information an basic usage." 
+                ;;
+        esac
+
         echo "Enjoy it!"
 	# TODO...
 }
@@ -409,9 +471,9 @@ function _postinstall(){
 # run welcome function
 _welcome
 # show requirements message and other stuff
-_requirements
+#_requirements
 # run a basic test requirements environment to prepare the new OPEW installation
-#_testenv
+_testenv
 # run the preinstall process
 #_preinstall
 # show license agregement
