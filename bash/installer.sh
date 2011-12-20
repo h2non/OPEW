@@ -164,11 +164,11 @@ function _testenv(){
 	# check /opt has in an indepent partition
 	DISK=`df -P --sync | grep '/opt'`
 	if [ -z $DISK ]; then
-		echo "OK: the /opt folder has been detected as an independent disk partition."
-		PARTITION=1
-	else
 		echo "OK: the /opt folder hasn't been detected as an independent partition."
 		PARTITION=0
+	else
+		echo "OK: the /opt folder has been detected as an independent disk partition."
+		PARTITION=1
 	fi
 
 	# check if exists a symbolic link
