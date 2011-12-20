@@ -283,7 +283,7 @@ function _checkspace(){
 		DISK=$(df -P | grep '/$' | awk '{print $1}')
 		TOTAL=$(df -P | grep '/$' | awk '{print $3}')
 	else
-		TOTAL=$(df -P | grep '/$' | awk '{print $3}')
+		TOTAL=$(df -P | grep '/opt$' | awk '{print $3}')
 		SPACE=$(df -P | grep '/opt$' | awk '{print $4}')
                 PERCEN=$(df -P | grep '/opt$' | awk '{print $5}')
 		DISK=$(df -P | grep '/opt$' | awk '{print $1}')
