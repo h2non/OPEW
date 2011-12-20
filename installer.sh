@@ -5,7 +5,7 @@
 #
 # @license	GNU GPL 3.0
 # @author	Tomas Aparicio <tomas@rijndael-project.com>
-# @version	1.1 beta - 12/12/2011
+# @version	1.2 beta - 20/12/2011
 #
 # Copyright (C) 2011 - Tomas Aparicio
 #
@@ -42,7 +42,6 @@ if [ -z $PATH ]; then
 	echo "export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 	exit 1
 fi
-
 
 function _debuglog(){
 	if [ -s $LOG; then
@@ -92,7 +91,7 @@ function _requirements(){
 	echo " "
 	echo "* x64 based (64 bits) compatible processor"
 	echo "* Minimum of 256 MB of RAM"
-	echo "* Minimum of 1024 MB of hard disk available space"
+	echo "* Minimum of 768 MB of hard disk free space (so 1GB is recommended)"
 	echo "* At once a mininal GNU/Linux (64 bits) based OS"
 	echo "* TCP/IP protocol support" 
 	echo "* Root access level"
@@ -163,11 +162,12 @@ function _testenv(){
 	fi
 
 	# check /opt has in an indepent partition
-	 if $(df -P --sync | grep "/opt" >> $LOG) ; then
+	DISK=`df -P --sync | grep '/opt'`
+	if [ -z $DISK ]; then
 		echo "OK: the /opt folder has been detected as an independent disk partition."
 		PARTITION=1
 	else
-		echo "OK: the /opt folder hasn't been detected  as an independent partition."
+		echo "OK: the /opt folder hasn't been detected as an independent partition."
 		PARTITION=0
 	fi
 
@@ -178,7 +178,7 @@ function _testenv(){
                 echo "Seems already exists another OPEW installation with a custom path: "
                 echo `ls -ali /opt/ | grep "opew ->"`
 		echo " "
-                echo "Take into account the new installation will make inoperative the old OPEW installation."
+                echo "Take into account the new installation will turn inoperative the old OPEW installation."
                 echo "You should stop all of the services running at the old OPEW stack before continue with the new installation. "
                 echo " "
                 read -p "Do you want automatically stop all the services running at the OPEW old installation: (y/n) " response
@@ -267,6 +267,46 @@ function _testenv(){
 	read -p "Press enter to continue... "
 }
 
+#
+# Check free available space 
+# @param {integer} 1 for check '/opt' or 0 for '/' partition 
+# @return {none}
+#
+function _checkspace(){
+	# force to 0 if not isset
+	if [ $# -eq 0 ]; then 
+		1=0 
+	fi
+	if [ $1 -eq 0 ]; then
+		SPACE=$(df -P | grep '/$' | awk '{print $4}')
+                PERCEN=$(df -P | grep '/$' | awk '{print $5}')
+		DISK=$(df -P | grep '/$' | awk '{print $1}')
+		TOTAL=$(df -P | grep '/$' | awk '{print $3}')
+	else
+		TOTAL=$(df -P | grep '/$' | awk '{print $3}')
+		SPACE=$(df -P | grep '/opt$' | awk '{print $4}')
+                PERCEN=$(df -P | grep '/opt$' | awk '{print $5}')
+		DISK=$(df -P | grep '/opt$' | awk '{print $1}')
+	fi
+
+	echo " " 
+	echo "Checking available disk space: "
+	echo "You have "$(($SPACE / 1024))" MB ($PERCEN free) from total "$(($TOTAL / 1024))" MB available space at the OPEW target installation partition ($DISK)."
+	echo " "
+	# check is lower than 786MB
+	if [ $SPACE -lt 798720 ]; then
+	        echo "ERROR:"
+		echo "OPEW needs at once 786MB of free space available."
+		echo "You only have "$(($SPACE / 1024))" MB of free available space at the target installation partition." 
+		_die "Cannot continue with the installation process..."
+        else 
+		echo "OK:"
+		echo "You have more than 786MB of free space available."
+		echo "After the OPEW installation you will have approximately about "$((($SPACE/1024)-786))" MB of free space available at $DISK partition."
+	fi
+	echo " "
+}
+
 function _preinstall(){
 	echo " "
 	echo "##############################################"
@@ -286,13 +326,8 @@ function _preinstall(){
 			else 
 			
 			# check free avaiable space
-			if [ $PARTITION  -eq 0 ]; then
-				SPACE=$(df -P | grep "/" | awk "{print $5}")
-				# TODO...
-			else
-				# TODO...
-			fi
-			
+			_checkspace $PARTITION
+
 			break
 			fi 
 		done 
@@ -471,7 +506,7 @@ function _postinstall(){
 # run welcome function
 _welcome
 # show requirements message and other stuff
-#_requirements
+_requirements
 # run a basic test requirements environment to prepare the new OPEW installation
 _testenv
 # run the preinstall process
