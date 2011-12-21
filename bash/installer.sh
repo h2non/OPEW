@@ -295,18 +295,18 @@ function _checkspace(){
 
 	echo " " 
 	echo "Checking available disk space: "
-	echo "You have "$(($SPACE / 1024))" MB ($PERCEN free) from total "$(($TOTAL / 1024))" MB available space at the OPEW target installation partition ($DISK)."
+	echo "You have "$((${SPACE} / 1024))" MB ($PERCEN free) from total "$((${TOTAL} / 1024))" MB available space at the OPEW target installation partition ($DISK)."
 	echo " "
 	# check is lower than 786MB
 	if [ $SPACE -lt 798720 ]; then
 	        echo "ERROR:"
 		echo "OPEW needs at once 786MB of free space available."
-		echo "You only have "$(($SPACE / 1024))" MB of free available space at the target installation partition." 
+		echo "You only have "$((${SPACE} / 1024))" MB of free available space at the target installation partition." 
 		_die "Cannot continue with the installation process..."
         else 
 		echo "OK:"
 		echo "You have more than 786MB of free space available."
-		echo "After the OPEW installation you will have approximately about "$((($SPACE/1024)-786))" MB of free space available at $DISK partition."
+		echo "After the OPEW installation you will have approximately about "$(((${SPACE}/1024)-786))" MB of free space available at $DISK partition."
 	fi
 	echo " "
 }
@@ -328,11 +328,10 @@ function _preinstall(){
 				echo "Invalid path o the directory already exists. Enter a new path... (CTRL+C to exit)"
                                	echo " "
 			else 
-			
-			# check free avaiable space
-			_checkspace $PARTITION
+				# check free avaiable space
+				_checkspace $PARTITION
 
-			break
+				break
 			fi 
 		done 
 		;;
@@ -362,23 +361,67 @@ function _usersinstall(){
 	# installing groups
 	for i in $(echo "opew;opew-httpd;opew-mysql;opew-postgres" | tr ";" "\n")
 	do
+		# check group exists
+                grep -i "^$i" /etc/group >> $LOG
+                if [ $? -eq 0 ]; then
+                echo "NOTE: The group '$i' already exists."
+                else
+                echo "OK: The group '$i' is available."
+		echo -n "Creating $i system group... "
+		
+			groupadd $i >> $LOG
+			if [ $? -eq 0 ]; then
+			 	sleep 0.5
+			 	echo "created!"
+				groups[((c++))]=$i
+			else
+			 	sleep 0.5
+				echo "cannot create the group. See $LOG file."
+				echo "ERROR: cannot create the system group $i -> $0" >> $LOG
+			fi 
+			fi
+
+		sleep 0.5
+
 		# check if user exists
 		grep -i "^$i" /etc/passwd >> $LOG
 		if [ $? -eq 0 ]; then
-        	echo "NOTE: The user '$i' already exists."
+		echo "NOTE: The user '$i' already exists."
 		else
-        	echo "OK: The user '$i' don't exists."
+
+		echo "OK: The user '$i' is available."
+
+		read -p "You can define a suer password for security reasons. Do you wanna do? (y/n): " response
+		# TODO
+
 		fi
-		# check group exists
-		grep -i "^$i" /etc/group >> $LOG
-		if [ $? -eq 0 ]; then
-                echo "NOTE: The group '$i' already exists."
-                else
-                echo "OK: The group '$i' don't exists. "
-                fi
+		echo " "
 	done
 
-	# TODO
+	read -p "Process completed. Press enter for continue... "
+
+	echo " "
+
+	if [ ! -z $groups ]; then
+	echo "Detailed information of the users and group created:"
+        echo "Groups: " 
+	for i in "${groups[@]}"; do
+		c=0
+		for x in $(grep "${i}:" /etc/group | tr ":" "\n"); do
+			((c++))
+			case $c in
+			1)
+			echo "Group name: $x"
+			;;
+			3)
+			echo "GID: $x"
+			;;
+			esac
+		done 
+	echo " "
+	done
+	fi 
+
 }
 
 function _license(){
@@ -512,10 +555,11 @@ function _postinstall(){
 	# TODO...
 }
 
+#_checkspace 0
 # run welcome function
 _welcome
 # show requirements message and other stuff
-#_requirements
+_requirements
 # run a basic test requirements environment to prepare the new OPEW installation
 #_testenv
 # run the preinstall process
@@ -525,7 +569,7 @@ _welcome
 # run usersinstall process
 _usersinstall
 # finally install
-_doinstall
+#_doinstall
 # TODO
 _postinstall
 
