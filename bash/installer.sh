@@ -5,7 +5,7 @@
 #
 # @license	GNU GPL 3.0
 # @author	Tomas Aparicio <tomas@rijndael-project.com>
-# @version	1.2 beta - 20/12/2011
+# @version	1.3 beta - 21/12/2011
 #
 # Copyright (C) 2011 - Tomas Aparicio
 #
@@ -74,6 +74,10 @@ function _welcome(){
 	echo " "
 	echo "* Also, if you experiment any issue during the execution, please report it here:"
 	echo "http://github.com/h2non/opew/issues"
+	echo " "
+	echo "The installer will generate two log files: "
+	echo "$LOG > Some output commands log"
+	echo "$FILES > Files installation log"
 	echo " "
 }
 
