@@ -38,7 +38,7 @@ ERROR=0
 # check PATH environment variable
 if [ -z $PATH ]; then
 	echo "The PATH environment variable is empty. Cannot continue with the installation process..."
-	echo "Should define it correctly. Please, ejecute this: " 
+	echo "Must be define it. Please, ejecute this: " 
 	echo "export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 	exit 1
 fi
@@ -70,7 +70,7 @@ function _welcome(){
 	echo "* You can take a look at the script code behind this installer typing on the shell: "
 	echo "$ vi $0 | head -n 395"
 	echo "Or via web from the public Git repository: "
-	echo "http://github.com/h2non/opew/installer.sh "
+	echo "https://github.com/h2non/OPEW/blob/master/bash/installer.sh "
 	echo " "
 	echo "* Also, if you experiment any issue during the execution, please report it here:"
 	echo "http://github.com/h2non/opew/issues"
@@ -345,9 +345,8 @@ function _usersinstall(){
 	echo "##############################################"
 	echo "Installation step - 3. System users and groups"
 	echo " "
-	echo "OPEW includes packages like Apache HTTP Server, MySQL and PostgreSQL DBMS thats by technical requirements and security recomendations"
-	echo "needs to works with custom OS users with his own privileges."
-	echo "Is order to work properly with these packages, OPEW installer will create the following users and groups at this system:"
+	echo "OPEW includes packages like Apache HTTP Server, MySQL and PostgreSQL DBMS thats by technical requirements and security recomendations needs to works with custom OS users with his own privileges."
+	echo "In order to work properly with these packages, OPEW installer will create the following users and groups at this system:"
 	echo " "
 	echo "opew (general purpose OPEW user and group name)"
 	echo "opew_postgres (PostgreSQL DBMS user and group) "
@@ -360,13 +359,19 @@ function _usersinstall(){
 	for i in $(echo "opew;opew-httpd;opew-mysql;opew-postgres" | tr ";" "\n")
 	do
 		# check if user exists
-		grep -i "^$i" /etc/passwd >> $PWD
+		grep -i "^$i" /etc/passwd >> $LOG
 		if [ $? -eq 0 ]; then
-        	echo "Existe el usuario"
+        	echo "NOTE: The user '$i' already exists."
 		else
-        	echo "NO existe el usuario"
+        	echo "OK: The user '$i' don't exists."
 		fi
-		
+		# check group exists
+		grep -i "^$i" /etc/group >> $LOG
+		if [ $? -eq 0 ]; then
+                echo "NOTE: The group '$i' already exists."
+                else
+                echo "OK: The group '$i' don't exists. "
+                fi
 	done
 
 	# TODO
@@ -506,15 +511,15 @@ function _postinstall(){
 # run welcome function
 _welcome
 # show requirements message and other stuff
-_requirements
+#_requirements
 # run a basic test requirements environment to prepare the new OPEW installation
-_testenv
+#_testenv
 # run the preinstall process
 #_preinstall
 # show license agregement
 #_license
 # run usersinstall process
-#_usersinstall
+_usersinstall
 # finally install
 _doinstall
 # TODO
