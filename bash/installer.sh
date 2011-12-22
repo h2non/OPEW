@@ -5,7 +5,7 @@
 #
 # @license	GNU GPL 3.0
 # @author	Tomas Aparicio <tomas@rijndael-project.com>
-# @version	1.3 beta - 21/12/2011
+# @version	1.3 beta - 23/12/2011
 #
 # Copyright (C) 2011 - Tomas Aparicio
 #
@@ -368,12 +368,10 @@ function _usersinstall(){
                 else
                 echo "OK: The group '$i' is available."
 		echo -n "Creating $i system group... "
-		
 			groupadd $i >> $LOG
 			if [ $? -eq 0 ]; then
 			 	sleep 0.5
 			 	echo "created!"
-				groups[((c++))]=$i
 			else
 			 	sleep 0.5
 				echo "cannot create the group. See $LOG file."
@@ -388,11 +386,19 @@ function _usersinstall(){
 		if [ $? -eq 0 ]; then
 		echo "NOTE: The user '$i' already exists."
 		else
-
 		echo "OK: The user '$i' is available."
+		echo -n "Creating $i system user... "
 
-		read -p "You can define a suer password for security reasons. Do you wanna do? (y/n): " response
-		# TODO
+		#read -p "You can define a user password for security reasons. Do you wanna do? (y/n): " response
+		useradd "$i" -b /opt/opew/stack -d /opt/opew/stack -g "$i" -s /bin/false -M >> $LOG 
+		sleep 0.5
+		if [ $? -eq 0 ]; then
+			echo "created!"
+			users[((c++))]=$i
+		else
+			echo "cannot create the user. An error ocurred."
+			_die "Can't continue with the installation. See $LOG file and try again."
+		fi
 
 		fi
 		echo " "
@@ -402,24 +408,35 @@ function _usersinstall(){
 
 	echo " "
 
-	if [ ! -z $groups ]; then
+	if [ ! -z $users ]; then
 	echo "Detailed information of the users and group created:"
-        echo "Groups: " 
-	for i in "${groups[@]}"; do
-		c=0
-		for x in $(grep "${i}:" /etc/group | tr ":" "\n"); do
-			((c++))
-			case $c in
-			1)
-			echo "Group name: $x"
+	for i in "${users[@]}"; do
+                c=0
+                for x in $(grep "${i}:" /etc/passwd | tr ":" "\n"); do
+                        ((c++))
+                        case $c in
+                        1)
+                        echo "Username: $x"
+                        ;;
+			2)
+			echo "Group: $i"
 			;;
-			3)
+                        3)
+                        echo "UID: $x"
+                        ;;
+			4)
 			echo "GID: $x"
 			;;
-			esac
-		done 
-	echo " "
-	done
+			5)
+			echo "Home directory: $x"
+			;;
+			6)
+			echo "Shell: $x"
+			;;
+                        esac
+                done
+        echo " "
+        done
 	fi 
 
 }
@@ -519,40 +536,97 @@ function _postinstall(){
 
 	echo "Assingning permissions:"
 	# opew
-	chown -R opew /opt/opew/stack/
+	chown -R opew /opt/opew/scripts/ >> $LOG
+	chmod -R +x /opt/opew/scripts >> $LOG
+	if [ $? -eq 0 ]; then
+	echo "Assiged permissions to opew user..."
+	else
+	echo "Error assigning OPEW permissions"
+	echo "Run manually 'chown -R opew /opt/opew/scripts'"
+	echo " "
+	sleep 2
+	fi
+	sleep 0.5
 	# apache 
-
+	chown -R opew-httpd /opt/opew/stack/apache2/htdocs >> $LOG
+	chown -R opew-httpd /opt/opew/stack/apache2/logs >> $LOG
+	if [ $? -eq 0 ]; then
+	echo "Assigning permisssion to opew-httpd user..."
+	else
+        echo "Error assigning opew-httpd user permissions"
+        echo "Run manually 'chown -R opew-httpd /opt/opew/stack/apache2/htdocs'"
+        echo " "
+        sleep 2
+        fi
+	sleep 0.5
 	# mysql
-	
+	chown -R opew-mysql /opt/opew/stack/mysql/data >> $LOG
+	if [ $? -eq 0 ]; then
+	echo "Assigning permissions to opew-mysql user..."
+	else
+        echo "Error assigning MysQL permissions to /opt/opew/stack/mysql/data"
+        echo "Run manually 'chown -R opew /opt/opew/scripts'"
+        echo " "
+        sleep 2
+        fi
+	sleep 0.5
 	# postgresql
+	chown -R opew-postgres /opt/opew/stack/postgresql/data >> $LOG
+	if [ $? -eq 0 ]; then
+	echo "Assigning permission to opew-postgres user..."
+	else
+        echo "Error assigning PostgreSQL permissions"
+        echo "Run manually 'chown -R opew-postgres /opt/opew/stack/postgres/data'"
+        echo " "
+        sleep 2
+        fi
+	sleep 1
 
 	echo " "
 	echo "Take a look the README file located in $OPEW for getting started."
         echo "The complete OPEW documentation is online available at:"
         echo "http://opew.sourceforge.net/docs"
         echo " "
-	
+
 	read -p "Do you want to start the Apache HTTP server? (y/n): " response
 	case $response in
                 y|Y|yes|Yes|YES)
-			 /opt/opew/scripts/services start apache
+			# check if port TCP 80 is available
+			netstat -ltp --numeric-ports | grep :80 >> $LOG
+			if [ $? -eq 0 ]; then
+			sleep 1
+			echo " "
+			echo "Seem the port TCP 80 is already used by another server application."
+			echo "Stop the service and try again or change the Apache HTTP server default port to another via /opt/opew/stack/apache/conf/httpd.conf"
+			echo "After that, run manually: "
+			echo "/opt/opew/scripts/services start apache"
+			echo " "
+			else
+			/opt/opew/scripts/services start apache >> $LOG
+			sleep 1
+			echo " "
+			echo "The HTTP server is running! Try it with your web browser typing http://localhost or http://your-ip"
+			echo "Also, you can see the documentation typing http://localhost/docs"
+			fi
                 ;;
                 *)
-		echo "You can start the OPEW services running the 'services' script."
-		echo "./opt/opew/scripts/services start <service>"
 		echo " "
-		echo "List of services: "
+		echo "You can start the OPEW services running the following script."
+		echo "/opt/opew/scripts/services start <service>"
+		echo " "
+		echo "List of available services: "
 		echo "apache - Apache HTTP Server"
 		echo "mysql - MySQL Server"
 		echo "postgresql - PostgreSQL Server"
 		echo "mondodb - MongoDB Server"
 		echo " "
 		echo "See README at '/opt/opew/' for more information an basic usage." 
+		echo " "
                 ;;
         esac
 
-        echo "Enjoy it!"
-	# TODO...
+        echo "Thanks to try to use OPEW. Enjoy it!"
+
 }
 
 #_checkspace 0
@@ -567,7 +641,7 @@ _requirements
 # show license agregement
 #_license
 # run usersinstall process
-_usersinstall
+#_usersinstall
 # finally install
 #_doinstall
 # TODO
