@@ -389,6 +389,19 @@ function _usersinstall(){
 		echo "OK: The user '$i' is available."
 		echo -n "Creating $i system user... "
 
+		# postgresql user 
+		if [ $i == 'opew-postgres' ]; then
+		useradd "$i" -b /opt/opew/postgresql -d /opt/opew/stack/postgresql -g "$i" -s /bin/sh -M >> $LOG
+                sleep 0.5
+                if [ $? -eq 0 ]; then
+                        echo "created!"
+                        users[((c++))]=$i
+                else
+                        echo "cannot create the user. An error ocurred."
+                        _die "Can't continue with the installation. See $LOG file and try again."
+                fi
+		else
+		# in other cases
 		#read -p "You can define a user password for security reasons. Do you wanna do? (y/n): " response
 		useradd "$i" -b /opt/opew/stack -d /opt/opew/stack -g "$i" -s /bin/false -M >> $LOG 
 		sleep 0.5
@@ -398,6 +411,7 @@ function _usersinstall(){
 		else
 			echo "cannot create the user. An error ocurred."
 			_die "Can't continue with the installation. See $LOG file and try again."
+		fi
 		fi
 
 		fi
@@ -536,7 +550,7 @@ function _postinstall(){
 
 	echo "Assingning permissions:"
 	# opew
-	chown -R opew /opt/opew/scripts/ >> $LOG
+	chown -R root:root /opt/opew/scripts/ >> $LOG
 	chmod -R +x /opt/opew/scripts >> $LOG
 	if [ $? -eq 0 ]; then
 	echo "Assiged permissions to opew user..."
@@ -548,8 +562,8 @@ function _postinstall(){
 	fi
 	sleep 0.5
 	# apache 
-	chown -R opew-httpd /opt/opew/stack/apache2/htdocs >> $LOG
-	chown -R opew-httpd /opt/opew/stack/apache2/logs >> $LOG
+	chown -R opew-httpd:opew-httpd /opt/opew/stack/apache2/htdocs >> $LOG
+	chown -R opew-httpd:opew-httpd /opt/opew/stack/apache2/logs >> $LOG
 	if [ $? -eq 0 ]; then
 	echo "Assigning permisssion to opew-httpd user..."
 	else
@@ -560,7 +574,8 @@ function _postinstall(){
         fi
 	sleep 0.5
 	# mysql
-	chown -R opew-mysql /opt/opew/stack/mysql/data >> $LOG
+	chown -R opew-mysql:opew-mysql /opt/opew/stack/mysql/data >> $LOG
+	chown -R opew-mysql:opew-mysql /opt/opew/stack/mysql/tmp >> $LOG
 	if [ $? -eq 0 ]; then
 	echo "Assigning permissions to opew-mysql user..."
 	else
@@ -571,7 +586,7 @@ function _postinstall(){
         fi
 	sleep 0.5
 	# postgresql
-	chown -R opew-postgres /opt/opew/stack/postgresql/data >> $LOG
+	chown -R opew-postgres:opew-postgres /opt/opew/stack/postgresql/data >> $LOG
 	if [ $? -eq 0 ]; then
 	echo "Assigning permission to opew-postgres user..."
 	else
