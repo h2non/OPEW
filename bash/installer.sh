@@ -5,7 +5,7 @@
 #
 # @license	GNU GPL 3.0
 # @author	Tomas Aparicio <tomas@rijndael-project.com>
-# @version	1.3 beta - 23/12/2011
+# @version	1.3 beta - 24/12/2011
 #
 # Copyright (C) 2011 - Tomas Aparicio
 #
@@ -31,7 +31,7 @@
 # config variables
 LOG="$PWD/opew-install.log"
 FILES="$PWD/opew-files.log"
-OPEW="/opt/-opewtest"
+OPEW="/opt/opewtest"
 LINES=72810
 ERROR=0
 
@@ -67,17 +67,17 @@ function _welcome(){
 	echo "This script (1.0 beta) will install OPEW in this system ("`hostname`")" 
 	echo "This installer will check and prepare the system properly before install"
 	echo " "
-	echo "* You can take a look at the script code behind this installer typing on the shell: "
-	echo "$ vi $0 | head -n 395"
+	echo "* You can take a look at the code behind this installer typing on the shell: "
+	echo '$ vi '$0' | head -n $(grep -n -E "^###\" '$0' | awk -F: "{print $1}")'
 	echo "Or via web from the public Git repository: "
 	echo "https://github.com/h2non/OPEW/blob/master/bash/installer.sh "
 	echo " "
-	echo "* Also, if you experiment any issue during the execution, please report it here:"
+	echo "* Also, if you experiment any issue during the installation, please report it here:"
 	echo "http://github.com/h2non/opew/issues"
 	echo " "
-	echo "The installer will generate two log files: "
-	echo "$LOG > Some output commands log"
-	echo "$FILES > Files installation log"
+	echo "This installer will generate two log files: "
+	echo "$LOG > Some output commands log of the installation process"
+	echo "$FILES > Files installation extraction log"
 	echo " "
 }
 
@@ -395,6 +395,7 @@ function _usersinstall(){
                 sleep 0.5
                 if [ $? -eq 0 ]; then
                         echo "created!"
+			passwd -l opew-postgres >> $LOG # lock login access
                         users[((c++))]=$i
                 else
                         echo "cannot create the user. An error ocurred."
@@ -549,6 +550,8 @@ function _postinstall(){
 	echo " "
 
 	echo "Assingning permissions:"
+	# global permissions
+	# TODO
 	# opew
 	chown -R root:root /opt/opew/scripts/ >> $LOG
 	chmod -R +x /opt/opew/scripts >> $LOG
