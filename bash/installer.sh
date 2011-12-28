@@ -5,7 +5,7 @@
 #
 # @license	GNU GPL 3.0
 # @author	Tomas Aparicio <tomas@rijndael-project.com>
-# @version	1.3 beta - 24/12/2011
+# @version	1.3 beta - 25/12/2011
 #
 # Copyright (C) 2011 - Tomas Aparicio
 #
@@ -31,8 +31,8 @@
 # config variables
 LOG="$PWD/opew-install.log"
 FILES="$PWD/opew-files.log"
-OPEW="/opt/opewtest"
-LINES=72810
+OPEW="/opt/opew"
+LINES=71816
 ERROR=0
 
 # check PATH environment variable
@@ -43,6 +43,7 @@ if [ -z $PATH ]; then
 	exit 1
 fi
 
+# clear old installation log files
 function _debuglog(){
 	if [ -s $LOG; then
 		rm -f $LOG
@@ -56,6 +57,7 @@ function _debuglog(){
 
 function _welcome(){
 	clear
+	_debuglog
 	echo "##############################################"
 	echo "     OPEW - Open Web Development Stack " 
 	echo "##############################################"
@@ -120,10 +122,10 @@ function _testenv(){
 	# check if run as root
 	if [ "`id -u`" -ne 0 ];	then
         	echo "ERROR: "
-		echo "The installer must be ran like root user. Can't continue..."
-        	exit 1
+		echo "You must run the installer like a root user. You can't continue..."
+	       	exit 1
 	fi
-	echo "OK: running as root"
+	echo "OK: running as root user"
 
 	# check if /opt dir exists 
 	if [ ! -d "/opt" ]; then
@@ -275,6 +277,7 @@ function _testenv(){
 # Check free available space 
 # @param {integer} 1 for check '/opt' or 0 for '/' partition 
 # @return {none}
+# @todo Improve validating partition of alternative manual path
 #
 function _checkspace(){
 	# force to 0 if not isset
@@ -323,11 +326,12 @@ function _preinstall(){
 	case $response in
 		y|Y|yes|Yes|YES)
 		while : ; do
-			read -p "Please, enter the absolute new path: " newpath
-			if [ -z $newpath ] && [ -d $newpath ]; then
+			read -p "Please, enter the absolute new path (e.g /home or /usr): " newpath
+			if [ -z "$newpath/opew" ] && [ -d "$newpath/opew" ]; then
 				echo "Invalid path o the directory already exists. Enter a new path... (CTRL+C to exit)"
                                	echo " "
 			else 
+				OPEW=$newpath"/"
 				# check free avaiable space
 				_checkspace $PARTITION
 
@@ -341,6 +345,8 @@ function _preinstall(){
 		echo " "
 		;;
 	esac
+	read -p "Press enter to continue..." 
+	sleep 1
 }
 
 function _usersinstall(){
@@ -379,7 +385,7 @@ function _usersinstall(){
 			fi 
 			fi
 
-		sleep 0.5
+		sleep 1
 
 		# check if user exists
 		grep -i "^$i" /etc/passwd >> $LOG
@@ -463,7 +469,8 @@ function _license(){
 	echo " "
 	echo "OPEW include a lot of diferent packages and programming languages with his respective license."
 	echo "You can see the all packages licenses at /opt/opew/licenses/ once OPEW will be installed. "
-	echo "OPEW project and his native code included of the authors or contributors is licensed under the GNU GPL 3.0 public license (if not see the code header). You can read it at /opt/opew/LICENSE"
+	echo "OPEW project and his native code included of the authors or contributors is licensed under the GNU GPL 3.0 public license (if not see the code header). "
+	echo "You can read it at $newpath/opew/LICENSE"
 	echo " "
 	read  -p "You accept the respetive packages licenses and the OPEW license?: (y/n) " response
 	 case $response in
@@ -549,6 +556,14 @@ function _postinstall(){
 	echo "Installation step - 4. Post-install process."
 	echo " "
 
+	# makr symbolic link
+	if [ $OPEW != '/opt/opew' ]; then
+		echo -n "Post-install process: "
+       		sleep 1
+		ln -s $OPEW"/opew" /opt/opew
+		echo "done!"
+		echo " "
+	fi
 	echo "Assingning permissions:"
 	# global permissions
 	# TODO
@@ -647,22 +662,21 @@ function _postinstall(){
 
 }
 
-#_checkspace 0
 # run welcome function
 _welcome
 # show requirements message and other stuff
 _requirements
 # run a basic test requirements environment to prepare the new OPEW installation
-#_testenv
+_testenv
 # run the preinstall process
-#_preinstall
+_preinstall
 # show license agregement
-#_license
+_license
 # run usersinstall process
-#_usersinstall
+_usersinstall
 # finally install
-#_doinstall
-# TODO
+_doinstall
+# postinstall process
 _postinstall
 
 exit 0
