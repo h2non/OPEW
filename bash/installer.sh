@@ -5,7 +5,7 @@
 #
 # @license	GNU GPL 3.0
 # @author	Tomas Aparicio <tomas@rijndael-project.com>
-# @version	1.3 beta - 25/12/2011
+# @version	1.3 beta - 29/12/2011
 #
 # Copyright (C) 2011 - Tomas Aparicio
 #
@@ -29,10 +29,11 @@
 #
 
 # config variables
+VERSION="1.0.0 Beta RC3"
 LOG="$PWD/opew-install.log"
 FILES="$PWD/opew-files.log"
 OPEW="/opt/opew"
-LINES=71816
+LINES=70380
 ERROR=0
 
 # check PATH environment variable
@@ -45,7 +46,7 @@ fi
 
 # clear old installation log files
 function _debuglog(){
-	if [ -s $LOG; then
+	if [ -s $LOG ]; then
 		rm -f $LOG
 		touch $LOG
 	fi
@@ -61,6 +62,14 @@ function _welcome(){
 	echo "##############################################"
 	echo "     OPEW - Open Web Development Stack " 
 	echo "##############################################"
+	echo " "
+	echo "Version: $VERSION"
+	echo " "
+	echo "NOTICE: "
+	echo "This is an OPEW public release candidate still beta. Just for testing and experimental proposals."
+	echo "Feel free to feedback me with suggestions, critics, bugs.. via <tomas@rijndael-project.com>."
+	echo " "
+	read -p "Press enter to continue..."
 	echo " "
 	echo "OPEW is a complete, independent and extensible open distribution stack for GNU/Linux based OS."
         echo "Its goal is to provides an easy and portable ready-to-run development environment focused on modern web programming languages. "
@@ -571,9 +580,9 @@ function _postinstall(){
 	chown -R root:root /opt/opew/scripts/ >> $LOG
 	chmod -R +x /opt/opew/scripts >> $LOG
 	if [ $? -eq 0 ]; then
-	echo "Assiged permissions to opew user..."
+	echo "Assiged permissions to OPEW user..."
 	else
-	echo "Error assigning OPEW permissions"
+	echo "Error assigning OPEW user permissions"
 	echo "Run manually 'chown -R opew /opt/opew/scripts'"
 	echo " "
 	sleep 2
@@ -639,7 +648,7 @@ function _postinstall(){
 			sleep 1
 			echo " "
 			echo "The HTTP server is running! Try it with your web browser typing http://localhost or http://your-ip"
-			echo "Also, you can see the documentation typing http://localhost/docs"
+			echo "Also, you can see the documentation typing http://localhost/documentation"
 			fi
                 ;;
                 *)
