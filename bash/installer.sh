@@ -418,7 +418,7 @@ function _usersinstall(){
                 fi
 		else
 		# in other cases
-		#read -p "You can define a user password for security reasons. Do you wanna do? (y/n): " response
+		#read -p "You can define a user password for security reasons. You want to do it? (y/n): " response
 		useradd "$i" -b /opt/opew/stack -d /opt/opew/stack -g "$i" -s /bin/false -M >> $LOG 
 		sleep 0.5
 		if [ $? -eq 0 ]; then
@@ -439,6 +439,7 @@ function _usersinstall(){
 	echo " "
 
 	if [ ! -z $users ]; then
+
 	echo "Detailed information of the users and group created:"
 	for i in "${users[@]}"; do
                 c=0
@@ -634,7 +635,7 @@ function _postinstall(){
 	case $response in
                 y|Y|yes|Yes|YES)
 			# check if port TCP 80 is available
-			netstat -ltp --numeric-ports | grep :80 >> $LOG
+			netstat -ltp --numeric-ports | grep ":80$" >> $LOG
 			if [ $? -eq 0 ]; then
 			sleep 1
 			echo " "
