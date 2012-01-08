@@ -5,7 +5,7 @@
 #
 # @license	GNU GPL 3.0
 # @author	Tomas Aparicio <tomas@rijndael-project.com>
-# @version	1.3 beta - 29/12/2011
+# @version	1.4 beta - 08/01/2012
 #
 # Copyright (C) 2011 - Tomas Aparicio
 #
@@ -79,9 +79,9 @@ function _welcome(){
 	echo "This installer will check and prepare the system properly before install"
 	echo " "
 	echo "* You can take a look at the code behind this installer typing on the shell: "
-	echo '$ vi '$0' | head -n $(grep -n -E "^###\" '$0' | awk -F: "{print $1}")'
+	echo '$ vi '$0' | head -n 662'
 	echo "Or via web from the public Git repository: "
-	echo "https://github.com/h2non/OPEW/blob/master/bash/installer.sh "
+	echo "https://raw.github.com/h2non/OPEW/master/bash/installer.sh "
 	echo " "
 	echo "* Also, if you experiment any issue during the installation, please report it here:"
 	echo "http://github.com/h2non/opew/issues"
@@ -177,7 +177,7 @@ function _testenv(){
 	fi
 
 	# check /opt has in an indepent partition
-	DISK=`df -P --sync | grep '/opt'`
+	DISK=`df -P --sync | grep '/opt$' | awk '{print $6}'`
 	if [ -z $DISK ]; then
 		echo "OK: the /opt folder hasn't been detected as an independent partition."
 		PARTITION=0
@@ -283,28 +283,49 @@ function _testenv(){
 }
 
 #
-# Check free available space 
-# @param {integer} 1 for check '/opt' or 0 for '/' partition 
-# @return {none}
+# Check free available space partition 
+# @param {string} Path to check free space 
+# @return {integer} Partition freespace in MegaBytes @todo
 # @todo Improve validating partition of alternative manual path
 #
 function _checkspace(){
-	# force to 0 if not isset
+	# force to / if not path defined
 	if [ $# -eq 0 ]; then 
-		1=0 
-	fi
-	if [ $1 -eq 0 ]; then
-		SPACE=$(df -P | grep '/$' | awk '{print $4}')
-                PERCEN=$(df -P | grep '/$' | awk '{print $5}')
-		DISK=$(df -P | grep '/$' | awk '{print $1}')
-		TOTAL=$(df -P | grep '/$' | awk '{print $3}')
-	else
-		TOTAL=$(df -P | grep '/opt$' | awk '{print $3}')
-		SPACE=$(df -P | grep '/opt$' | awk '{print $4}')
-                PERCEN=$(df -P | grep '/opt$' | awk '{print $5}')
-		DISK=$(df -P | grep '/opt$' | awk '{print $1}')
+		$1="/"
 	fi
 
+	_PATH=""
+	_FOUND=0
+
+	# check complete path
+	_CHECK=$(df -P | grep "$1"'$' | awk '{print $6}')
+	if [ ! -z $_CHECK ]; then
+		echo "The partition exists > $1"
+		_PATH="$1"
+	else
+	# explore the path by directory
+	for val in $(echo "$1" | tr "/" "\n"); do
+		_PATH="$_PATH/$val"
+		# check if exists partition
+		_CHECK=$(df -P | grep "$_PATH"'$' | awk '{print $6}')
+		if [ ! -z $_CHECK ]; then
+			echo "FOUND PARTITION $_PATH"
+			_FOUND=1
+			break
+		fi
+	done
+	fi
+
+	# if not found as indepent partition
+	if [ $_FOUND -eq 0 ]; then
+		_PATH="/"
+	fi
+
+	SPACE=$(df -P | grep "$_PATH"'$' | awk '{print $4}')
+	PERCEN=$(df -P | grep "$_PATH"'$' | awk '{print $5}')
+	DISK=$(df -P | grep "$_PATH"'$' | awk '{print $1}')
+	TOTAL=$(df -P | grep "$_PATH"'$' | awk '{print $3}')
+	
 	echo " " 
 	echo "Checking available disk space: "
 	echo "You have "$((${SPACE} / 1024))" MB ($PERCEN free) from total "$((${TOTAL} / 1024))" MB available space at the OPEW target installation partition ($DISK)."
