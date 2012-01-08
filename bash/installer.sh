@@ -39,7 +39,8 @@ ERROR=0
 # check PATH environment variable
 if [ -z $PATH ]; then
 	echo "The PATH environment variable is empty. Cannot continue with the installation process..."
-	echo "Must be define it. Please, ejecute this: " 
+	echo "Must be defined in order to run the installer properly. "
+	echo "Please, copy and ejecute this (or your customized PATH environment): " 
 	echo "export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 	exit 1
 fi
@@ -79,7 +80,7 @@ function _welcome(){
 	echo "This installer will check and prepare the system properly before install"
 	echo " "
 	echo "* You can take a look at the code behind this installer typing on the shell: "
-	echo '$ vi '$0' | head -n 662'
+	echo '$ vi '$0' | head -n 715'
 	echo "Or via web from the public Git repository: "
 	echo "https://raw.github.com/h2non/OPEW/master/bash/installer.sh "
 	echo " "
