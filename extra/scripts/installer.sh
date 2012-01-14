@@ -5,7 +5,7 @@
 #
 # @license	GNU GPL 3.0
 # @author	Tomas Aparicio <tomas@rijndael-project.com>
-# @version	1.4 beta - 08/01/2012
+# @version	1.4 beta - 14/01/2012
 #
 # Copyright (C) 2011 - Tomas Aparicio
 #
@@ -25,7 +25,7 @@
 #
 
 #
-# THIS CODE IS NOT ENDED AND STILL BETA
+# THIS CODE STILL BETA
 #
 
 # config variables
@@ -67,16 +67,31 @@ function _welcome(){
 	echo "Version: $VERSION"
 	echo " "
 	echo "NOTICE: "
-	echo "This is an OPEW public release candidate still beta. Just for testing and experimental proposals."
-	echo "Feel free to feedback me with suggestions, critics, bugs.. via <tomas@rijndael-project.com>."
+	echo "This is an OPEW public release candidate still beta. Just for testing and experimental proposals, but expects to be broken."
 	echo " "
 	read -p "Press enter to continue..."
 	echo " "
 	echo "OPEW is a complete, independent and extensible open distribution stack for GNU/Linux based OS."
         echo "Its goal is to provides an easy and portable ready-to-run development environment focused on modern web programming languages. "
-        echo "You can read more at the project page: http://opew.sourceforge.net"
+        echo "You can read more at the project page: <http://opew.sourceforge.net>"
 	echo " "
-	echo "This script (1.0 beta) will install OPEW in this system ("`hostname`")" 
+	echo "OPEW provides the following open-source programming languages:"
+	echo "- PHP "
+	echo "- Perl "
+	echo "- Python (experimental)"
+	echo "- Ruby (experimental)"
+	echo "- Node.js"
+	echo "- Go (experimental)"
+	echo "- Lua (experimental)"
+	echo " "
+	echo "Also is provided the following open-source database management systems:"
+	echo "- MySQL "
+	echo "- PostgreSQL"
+	echo "- MongoDB (experimental)"
+	echo "- SQLite3"
+	echo " "
+	read -p "Press enter to continue..."
+	echo "This script will install OPEW in this system ("`hostname`")" 
 	echo "This installer will check and prepare the system properly before install"
 	echo " "
 	echo "* You can take a look at the code behind this installer typing on the shell: "
@@ -87,9 +102,9 @@ function _welcome(){
 	echo "* Also, if you experiment any issue during the installation, please report it here:"
 	echo "http://github.com/h2non/opew/issues"
 	echo " "
-	echo "This installer will generate two log files: "
-	echo "$LOG > Some output commands log of the installation process"
-	echo "$FILES > Files installation extraction log"
+	echo "This installer will generate the following both log files: "
+	echo "$LOG > Some output commands log about the installation process"
+	echo "$FILES > Installed files extraction log"
 	echo " "
 }
 
