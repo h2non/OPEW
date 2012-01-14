@@ -1,0 +1,346 @@
+#!/bin/bash
+#
+# OPEW - Open Web Development Stack
+# This is a part of the OPEW project <http://opew.sourceforge.net>
+# 
+# @description 	OPEW services manager bash script
+# @license	GNU GPL 3.0 
+# 
+
+# check if run as root
+if [ "`id -u`" -ne 0 ]; then
+       echo "ERROR: "
+       echo "You must run this script like a root user. You can't continue..."
+       exit 1
+fi
+
+# Disabling SELinux if enabled
+if [ -f "/usr/sbin/getenforce" ] ; then
+    selinux_status=`/usr/sbin/getenforce`
+    /usr/sbin/setenforce 0 2> /dev/null
+fi
+
+OPEWDIR=/opt/opew/stack
+
+if [ -r "$OPEWDIR/scripts/setenv.sh" ]; then
+. "$OPEWDIR/scripts/setenv.sh"
+fi
+
+ERROR=0
+MYSQL_SCRIPT=$OPEWDIR/mysql/scripts/ctl.sh
+APACHE_SCRIPT=$OPEWDIR/apache2/scripts/ctl.sh
+MONGODB_SCRIPT=$OPEWDIR/mongodb/scripts/ctl.sh
+POSTGRESQL_SCRIPT=$OPEWDIR/postgresql/scripts/ctl.sh
+GIT_SCRIPT=$OPEWDIR/git/scripts/ctl.sh
+#MEMCACHED_SCRIPT=$OPEWDIR/memcached/scripts/ctl.sh
+
+help() {
+	cat <<EOF
+------------------------------
+    OPEW services manager 
+------------------------------
+
+Actions:
+help       - this screen
+start      - start the service(s)
+stop       - stop  the service(s)
+restart    - restart or start the service(s)
+status     - show the status of the service(s)
+
+Services:
+apache     - Apache HTTP Server
+mysql      - MySQL Server
+postgresql - PostgreSQL Server
+mongodb    - MondoDB Server
+git        - Git SCM Server
+
+EOF
+
+echo "Usage:"
+if test -x $APACHE_SCRIPT; then	
+	echo "       $0 (start|stop|restart|status) apache"
+fi
+if test -x $MYSQL_SCRIPT; then	
+	echo "       $0 (start|stop|restart|status) mysql"
+fi
+	if test -x $POSTGRESQL_SCRIPT; then	
+	echo "       $0 (start|stop|restart|status) postgresql"
+fi
+if test -x $MONGODB_SCRIPT; then
+	echo "       $0 (start|stop|restart|status) mongodb"
+fi
+if test -x $GIT_SCRIPT; then
+	echo "       $0 (start|stop|restart|status) git" 
+fi
+
+echo " "
+echo "Take a look at the OPEW documentation via <http://opew.sf.net/docs> or locally <http://localhost(:port)/documentation/"
+}
+
+if [ "x$1" = "xhelp" ] || [ "x$1" = "x" ]; then
+    help
+elif [ "x$1" = "xstart" ]; then
+
+    if [ "x$2" = "xmysql" ]; then
+        if test -x $MYSQL_SCRIPT; then
+            $MYSQL_SCRIPT start
+            MYSQL_ERROR=$?
+        fi
+    elif [ "x$2" = "xmongodb" ]; then
+       if test -x $MONGODB_SCRIPT; then
+           $MONGODB_SCRIPT start
+           MONGODB_ERROR=$?
+       fi
+    elif [ "x$2" = "xpostgresql" ]; then
+        if test -x $POSTGRESQL_SCRIPT; then	
+            $POSTGRESQL_SCRIPT start  
+            POSTGRESQL_ERROR=$?
+        fi
+    elif [ "x$2" = "xapache" ]; then
+        if test -x $APACHE_SCRIPT; then	
+            $APACHE_SCRIPT start  
+            APACHE_ERROR=$?
+        fi
+    elif [ "x$2" = "xgit" ]; then
+        if test -x $GIT_SCRIPT; then	
+            $GIT_SCRIPT start  
+            GIT_ERROR=$?
+        fi
+    else
+        if test -x $MYSQL_SCRIPT; then
+            $MYSQL_SCRIPT start
+            MYSQL_ERROR=$?
+            sleep 5
+        fi  
+	if test -x $MONGODB_SCRIPT; then
+            $MONGODB_SCRIPT start
+            MONGODB_ERROR=$?
+            sleep 5
+        fi
+        if test -x $POSTGRESQL_SCRIPT; then	
+            $POSTGRESQL_SCRIPT start  
+            POSTGRESQL_ERROR=$?
+            sleep 5
+        fi
+		
+        if test -x $APACHE_SCRIPT; then	
+            $APACHE_SCRIPT start  
+            APACHE_ERROR=$?
+        fi
+		
+        if test -x $GIT_SCRIPT; then	
+            $GIT_SCRIPT start  
+            GIT_ERROR=$?
+        fi
+    fi
+
+
+elif [ "x$1" = "xstop" ]; then
+
+    if [ "x$2" = "xmysql" ]; then
+        if test -x $MYSQL_SCRIPT; then
+            $MYSQL_SCRIPT stop
+            MYSQL_ERROR=$?
+            sleep 2
+        fi        
+    elif [ "x$2" = "xpostgresql" ]; then
+        if test -x $POSTGRESQL_SCRIPT; then	
+            $POSTGRESQL_SCRIPT stop
+            POSTGRESQL_ERROR=$?
+            sleep 5
+        fi
+    elif [ "x$2" = "xmongodb" ]; then
+        if test -x $MONGODB_SCRIPT; then
+            $MONGODB_SCRIPT stop
+            MONGODB_ERROR=$?
+            sleep 5
+        fi
+    elif [ "x$2" = "xapache" ]; then
+        if test -x $APACHE_SCRIPT; then	
+            $APACHE_SCRIPT stop
+            APACHE_ERROR=$?
+        fi
+    elif [ "x$2" = "xgit" ]; then
+        if test -x $GIT_SCRIPT; then	
+            $GIT_SCRIPT stop
+            GIT_ERROR=$?
+        fi
+    else
+        if test -x $APACHE_SCRIPT; then	
+            $APACHE_SCRIPT stop  
+            APACHE_ERROR=$?
+        fi
+        if test -x $MYSQL_SCRIPT; then
+            $MYSQL_SCRIPT stop
+            MYSQL_ERROR=$?
+        fi
+        if test -x $POSTGRESQL_SCRIPT; then
+            $POSTGRESQL_SCRIPT stop
+            POSTGRESQL_ERROR=$?
+        fi
+		if test -x $MONGODB_SCRIPT; then
+            $MONGNDB_SCRIPT stop
+            MONGODB_ERROR=$?
+        fi
+		if test -x $GIT_SCRIPT; then
+            $GIT_SCRIPT stop
+            GIT_ERROR=$?
+        fi
+    fi
+
+elif [ "x$1" = "xrestart" ]; then
+
+    if [ "x$2" = "xmysql" ]; then
+        if test -x $MYSQL_SCRIPT; then
+            $MYSQL_SCRIPT stop
+            sleep 2
+            $MYSQL_SCRIPT start
+            MYSQL_ERROR=$?
+        fi
+    elif [ "x$2" = "xpostgresql" ]; then
+        if test -x $POSTGRESQL_SCRIPT; then	
+            $POSTGRESQL_SCRIPT stop  
+            sleep 5
+            $POSTGRESQL_SCRIPT start
+            POSTGRESQL_ERROR=$?
+        fi
+    elif [ "x$2" = "xapache" ]; then
+        if test -x $APACHE_SCRIPT; then	
+            $APACHE_SCRIPT stop  
+            sleep 2
+            $APACHE_SCRIPT start
+            APACHE_ERROR=$?
+        fi
+    elif [ "x$2" = "xgit" ]; then
+        if test -x $GIT_SCRIPT; then	
+            $GIT_SCRIPT stop  
+            sleep 2
+            $GIT_SCRIPT start
+            GIT_ERROR=$?
+        fi
+    else
+        if test -x $APACHE_SCRIPT; then	
+            $APACHE_SCRIPT stop
+			sleep 2
+            $APACHE_SCRIPT start  
+            APACHE_ERROR=$?
+			sleep 2
+		fi
+        if test -x $MYSQL_SCRIPT; then
+            $MYSQL_SCRIPT stop
+            sleep 2
+            $MYSQL_SCRIPT start;
+            MYSQL_ERROR=$?
+            sleep 2
+        fi         
+        if test -x $POSTGRESQL_SCRIPT; then
+            $POSTGRESQL_SCRIPT stop
+            sleep 2
+            $POSTGRESQL_SCRIPT start;
+            POSTGRESQL_ERROR=$?
+            sleep 2
+        fi          
+        if test -x $GIT_SCRIPT; then	
+            $GIT_SCRIPT stop
+            sleep 2
+            $git_SCRIPT start
+            GIT_ERROR=$?
+            sleep 2
+        fi
+        if test -x $MONGODB_SCRIPT; then
+            $MONGNDB_SCRIPT stop
+            sleep 2
+            $MONGNDB_SCRIPT start
+            MONGODB_ERROR=$?
+            sleep 2
+        fi
+    fi
+
+elif [ "x$1" = "xstatus" ]; then
+
+    if [ "x$2" = "xmysql" ]; then
+        if test -x $MYSQL_SCRIPT; then
+            $MYSQL_SCRIPT status
+            sleep 2
+        fi        
+    elif [ "x$2" = "xpostgresql" ]; then
+        if test -x $POSTGRESQL_SCRIPT; then	
+            $POSTGRESQL_SCRIPT status  
+            sleep 2
+        fi
+    elif [ "x$2" = "xapache" ]; then
+        if test -x $APACHE_SCRIPT; then	
+            $APACHE_SCRIPT status
+        fi
+    elif [ "x$2" = "git" ]; then
+        if test -x $GIT_SCRIPT; then	
+            $GIT_SCRIPT status
+        fi
+    else
+        if test -x $APACHE_SCRIPT; then	
+            $APACHE_SCRIPT status  
+        fi
+        if test -x $MYSQL_SCRIPT; then
+            $MYSQL_SCRIPT status
+        fi
+        if test -x $POSTGRESQL_SCRIPT; then
+            $POSTGRESQL_SCRIPT status
+            sleep 3
+        fi
+        if test -x $GIT_SCRIPT; then
+            $GIT_SCRIPT status
+        fi
+        if test -x $MONGODB_SCRIPT; then
+            $MONGODB_SCRIPT status
+        fi
+    fi
+elif [ "x$1" = "xcleanpid" ]; then
+    if test -x $HYPERSONIC_SCRIPT; then
+        $HYPERSONIC_SCRIPT cleanpid
+    fi
+    if test -x $JBOSS_SCRIPT; then
+        $JBOSS_SCRIPT cleanpid
+    fi
+    if test -x $NAGIOS_SCRIPT; then
+        $NAGIOS_SCRIPT cleanpid
+    fi
+    if test -x $SUBVERSION_SCRIPT; then
+        $SUBVERSION_SCRIPT cleanpid
+    fi
+    if test -x $APACHE_SCRIPT; then	
+        $APACHE_SCRIPT cleanpid  
+    fi
+    if test -x $LUCENE_SCRIPT; then	
+        $LUCENE_SCRIPT cleanpid 
+    fi
+    if test -x $TOMCAT_SCRIPT; then
+        $TOMCAT_SCRIPT cleanpid
+    fi
+    if test -x $MYSQL_SCRIPT; then
+        $MYSQL_SCRIPT cleanpid
+    fi
+    if test -x $POSTGRESQL_SCRIPT; then
+        $POSTGRESQL_SCRIPT cleanpid
+    fi
+    if test -x $MEMCACHED_SCRIPT; then
+        $MEMCACHED_SCRIPT cleanpid
+    fi
+else
+    help
+    exit 1
+fi
+
+# Checking for errors
+for e in $APACHE_ERROR $MYSQL_ERROR $POSTGRESQL_ERROR $MONGODB_ERROR $GIT_ERROR ; do
+    if [ $e -gt 0 ]; then
+        ERROR=$e
+    fi
+done
+
+# Restoring SELinux
+if [ -f "/usr/sbin/getenforce" ] ; then
+    /usr/sbin/setenforce $selinux_status 2> /dev/null
+fi
+
+# return errors
+exit $ERROR
