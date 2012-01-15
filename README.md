@@ -102,6 +102,17 @@ bash-4.1# gem install rails
 bash-4.1# easy_install Django
 ```
 
+# Users authentication
+
+Default OPEW services authentication credentials:
+
+* MySQL
+  - User: `root`
+  - Password: `opewopew`
+* PosgreSQL 
+  - User: `postgres`
+  - Password: `opewopew`
+
 # Code
 
 All the code developed for the OPEW project should stay at the Git public repository <https://github.com/h2non/OPEW>.

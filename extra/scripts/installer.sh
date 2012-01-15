@@ -96,7 +96,7 @@ function _welcome(){
 	echo "This installer will check and prepare the system properly before install"
 	echo " "
 	echo "* You can review the code behind this script installer simply typing: "
-	echo '$ vi '$0' | head -n 740'
+	echo '$ vi '$0' | head -n 742'
 	echo "Or via web from the public Git repository: "
 	echo "https://raw.github.com/h2non/OPEW/master/extra/scripts/installer.sh "
 	echo " "
@@ -516,7 +516,7 @@ function _license(){
 	echo "Installation step - 2. License agreement"
 	echo " "
 	echo "OPEW include a lot of diferent packages and programming languages with his respective license."
-	echo "You can see the all packages licenses at /opt/opew/licenses/ once OPEW will be installed. "
+	echo "You can see the all packages licenses at $OPEW/licenses/ once OPEW will be installed. "
 	echo "OPEW project and his native code included of the authors or contributors is licensed under the GNU GPL 3.0 public license (if not see the code header). "
 	echo "You can read it at $OPEW/licenses"
 	echo " "
@@ -607,7 +607,7 @@ function _postinstall(){
 	echo "############################################"
 	echo "Installation step - 4. Post-install process."
 	echo " "
-
+	sleep 2
 	# make symbolic link
 	if [ $OPEW != '/opt/opew' ]; then
 		echo -n "Post-install process: "
@@ -633,6 +633,7 @@ function _postinstall(){
 	sleep 0.5
 	# apache 
 	chown -R opew-httpd:opew-httpd /opt/opew/stack/apache2/htdocs >> $LOG
+	chown -R opew-httpd:opew-httpd /opt/opew/stack/php/tmp >> $LOG
 	#chown -R opew-httpd:opew-httpd /opt/opew/stack/apache2/logs >> $LOG
 	if [ $? -eq 0 ]; then
 	echo "Assigning permisssion to opew-httpd user..."
@@ -690,7 +691,7 @@ function _postinstall(){
 			echo "/opt/opew/scripts/opew start apache"
 			echo " "
 			else
-			/opt/opew/scripts/services start apache >> $LOG
+			/opt/opew/scripts/opew start apache >> $LOG
 			sleep 1
 			echo " "
 			echo "The HTTP server is running! Try it with your web browser typing http://localhost or http://your-ip"
@@ -698,6 +699,7 @@ function _postinstall(){
 			fi
                 ;;
                 *)
+		sleep 1
 		echo " "
 		echo "You can start the OPEW services running the following script."
 		echo "/opt/opew/scripts/opew (start|stop|restart|status) <service>"
