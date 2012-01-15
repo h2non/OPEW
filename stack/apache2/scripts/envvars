@@ -1,0 +1,6 @@
+	export LD_LIBRARY_PATH="/opt/opew/stack/common/lib:/opt/opew/stack/apache2/lib:$LD_LIBRARY_PATH"
+	PATH=$PATH:/opt/opew/stack/php/bin
+export PATH
+PHPRC=/opt/opew/stack/php/etc
+export PHPRC
+export LD_LIBRARY_PATH="/opt/opew/stack/mysql/lib:$LD_LIBRARY_PATH"
