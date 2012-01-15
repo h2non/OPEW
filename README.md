@@ -43,10 +43,32 @@ Its goal is to provides an easy and portable ready-to-run development environmen
 * Well documented and tutorials 
 * Development tools for a fast setup project environment
 
+# Installation
+
+Get the latest OPEW release from <http://sourceforge.net/projects/opew/files/latest/download>.
+
+After it, simply do:
+
+```bash
+$ chmod +x opew-1.0.*.bin
+# ./opew-1.0.*.bin
+```
+
+Later, just follow the installation steps.
+
 # Usage
 
-You can start some services (HTTP Server, MySQL, PostgreSQL...) via the "services" script located at:
-/opt/opew/scripts/opew 
+When OPEW was correctly installed you can start the services (HTTP Server, MySQL, PostgreSQL...) using the following script:
+
+```bash
+/opt/opew/scripts/opew (start|stop|restart|status) <service> 
+```
+
+Services availables:
+
+```bash
+/opt/opew/scripts/opew help
+```
 
 # Code
 
@@ -62,3 +84,9 @@ http://sourceforge.net/projects/opew/files/latest/download
 Take into account OPEW is a beta experimental version.
 An improved new release with all feature is coming soon... keep updated.
 More info: <http://opew.sf.net>
+
+# Author
+
+OPEW was born in 2010 from an idea and personal project by Tomas Aparicio.
+OPEW is a personal another research project under continuous development and improvent. 
+
