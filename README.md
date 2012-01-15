@@ -6,7 +6,7 @@ GIVEN SOME FEEDBACK FROM THE DEVELOPERS COMMUNITY. TEST IT AND MAIL ME ANY ISSUE
 # About
 
 OPEW (Open Web Development Stack) is a complete, independent and extensible open distribution stack for GNU/Linux based OS. 
-Its goal is to provides an easy and portable ready-to-run development environment focused on modern web programming languages. 
+Its goal is to provides an powerful and portable ready-to-run development environment focused on modern and robust (web) programming languages. 
 
 # Features
 

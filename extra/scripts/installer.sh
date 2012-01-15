@@ -5,7 +5,7 @@
 #
 # @license	GNU GPL 3.0
 # @author	Tomas Aparicio <tomas@rijndael-project.com>
-# @version	1.4 beta - 14/01/2012
+# @version	1.4 beta - 15/01/2012
 #
 # Copyright (C) 2011 - Tomas Aparicio
 #
@@ -95,7 +95,7 @@ function _welcome(){
 	echo "This installer will check and prepare the system properly before install"
 	echo " "
 	echo "* You can take a look at the code behind this installer typing on the shell: "
-	echo '$ vi '$0' | head -n 715'
+	echo '$ vi '$0' | head -n 720'
 	echo "Or via web from the public Git repository: "
 	echo "https://raw.github.com/h2non/OPEW/master/bash/installer.sh "
 	echo " "
@@ -603,7 +603,7 @@ function _postinstall(){
 	echo "Installation step - 4. Post-install process."
 	echo " "
 
-	# makr symbolic link
+	# make symbolic link
 	if [ $OPEW != '/opt/opew' ]; then
 		echo -n "Post-install process: "
        		sleep 1
@@ -616,19 +616,19 @@ function _postinstall(){
 	# TODO
 	# opew
 	chown -R root:root /opt/opew/scripts/ >> $LOG
-	chmod -R +x /opt/opew/scripts >> $LOG
+	chmod -R +x /opt/opew/scripts/ >> $LOG
 	if [ $? -eq 0 ]; then
 	echo "Assiged permissions to OPEW user..."
 	else
 	echo "Error assigning OPEW user permissions"
-	echo "Run manually 'chown -R opew /opt/opew/scripts'"
+	echo "Run manually 'chown -R root:root /opt/opew/scripts'"
 	echo " "
 	sleep 2
 	fi
 	sleep 0.5
 	# apache 
 	chown -R opew-httpd:opew-httpd /opt/opew/stack/apache2/htdocs >> $LOG
-	chown -R opew-httpd:opew-httpd /opt/opew/stack/apache2/logs >> $LOG
+	#chown -R opew-httpd:opew-httpd /opt/opew/stack/apache2/logs >> $LOG
 	if [ $? -eq 0 ]; then
 	echo "Assigning permisssion to opew-httpd user..."
 	else
@@ -645,18 +645,21 @@ function _postinstall(){
 	echo "Assigning permissions to opew-mysql user..."
 	else
         echo "Error assigning MysQL permissions to /opt/opew/stack/mysql/data"
-        echo "Run manually 'chown -R opew /opt/opew/scripts'"
+        echo "Run manually 'chown -R opew-mysql:opew-mysql /opt/opew/stack/mysql/data'"
+	echo "And 'chown -R opew-mysql:opew-mysql /opt/opew/stack/mysql/tmp'"
         echo " "
         sleep 2
         fi
 	sleep 0.5
 	# postgresql
 	chown -R opew-postgres:opew-postgres /opt/opew/stack/postgresql/data >> $LOG
+	chown opew-postgres:opew-postgres /opt/opew/stack/postgresql/ >> $LOG
 	if [ $? -eq 0 ]; then
 	echo "Assigning permission to opew-postgres user..."
 	else
         echo "Error assigning PostgreSQL permissions"
-        echo "Run manually 'chown -R opew-postgres /opt/opew/stack/postgres/data'"
+        echo "Run manually 'chown -R opew-postgres:opew-postgres /opt/opew/stack/postgres/data'"
+	echo "And 'chown opew-postgres:opew-postgres /opt/opew/stack/postgresql/'"
         echo " "
         sleep 2
         fi
@@ -665,7 +668,7 @@ function _postinstall(){
 	echo " "
 	echo "Take a look the README file located in $OPEW for getting started."
         echo "The complete OPEW documentation is online available at:"
-        echo "http://opew.sourceforge.net/docs"
+        echo "<http://opew.sourceforge.net/docs>"
         echo " "
 
 	read -p "Do you want to start the Apache HTTP server? (y/n): " response
@@ -679,28 +682,35 @@ function _postinstall(){
 			echo "Seem the port TCP 80 is already used by another server application."
 			echo "Stop the service and try again or change the Apache HTTP server default port to another via /opt/opew/stack/apache/conf/httpd.conf"
 			echo "After that, run manually: "
-			echo "/opt/opew/scripts/services start apache"
+			echo "/opt/opew/scripts/opew start apache"
 			echo " "
 			else
 			/opt/opew/scripts/services start apache >> $LOG
 			sleep 1
 			echo " "
 			echo "The HTTP server is running! Try it with your web browser typing http://localhost or http://your-ip"
-			echo "Also, you can see the documentation typing http://localhost/documentation"
+			echo "Also, you can see the documentation typing http://localhost/docs"
 			fi
                 ;;
                 *)
 		echo " "
 		echo "You can start the OPEW services running the following script."
-		echo "/opt/opew/scripts/services start <service>"
+		echo "/opt/opew/scripts/opew (start|stop|restart|status) <service>"
 		echo " "
 		echo "List of available services: "
 		echo "apache - Apache HTTP Server"
 		echo "mysql - MySQL Server"
 		echo "postgresql - PostgreSQL Server"
 		echo "mondodb - MongoDB Server"
+		echo "git - Git server daemon"
 		echo " "
-		echo "See README at '/opt/opew/' for more information an basic usage." 
+		echo "Also you can use the help for more information:"
+		echo "/opt/opew/stack/opew help"
+		echo " "
+		echo "If you wanna use the OPEW environment variables, simply run:"
+		echo "/opt/opew/scripts/env_opew"
+		echo " "
+		echo "See README at '/opt/opew/' for more information and basic usage." 
 		echo " "
                 ;;
         esac
