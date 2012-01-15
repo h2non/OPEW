@@ -32,7 +32,7 @@
 VERSION="1.0.0 Beta RC4"
 LOG="$PWD/opew-install.log"
 FILES="$PWD/opew-files.log"
-OPEW="/opt/opew"
+OPEW="/opt/"
 LINES=70380
 ERROR=0
 
@@ -477,7 +477,7 @@ function _usersinstall(){
 
 	if [ ! -z $users ]; then
 
-	echo "Detailed information of the users and group created:"
+	echo "Detailed information about the users and groups created:"
 	for i in "${users[@]}"; do
                 c=0
                 for x in $(grep "${i}:" /etc/passwd | tr ":" "\n"); do
@@ -506,7 +506,7 @@ function _usersinstall(){
         echo " "
         done
 	fi 
-
+	read -p "Press enter to continue... "
 }
 
 function _license(){
@@ -561,6 +561,9 @@ function _doinstall(){
 
 	# get final line with regex
 	skip=`awk '/^###DATA###/ {print NR + 1; exit 0; }' $0`
+	if [ ! -d $OPEW ]; then
+	mkdir $OPEW
+	fi
 	# tail from final and start uncompress
 	tail -n +$skip $0 | tar xvz -C $OPEW >> $FILES &
 
