@@ -63,7 +63,7 @@ fi
 if test -x $MYSQL_SCRIPT; then	
 	echo "       $0 (start|stop|restart|status) mysql"
 fi
-	if test -x $POSTGRESQL_SCRIPT; then	
+if test -x $POSTGRESQL_SCRIPT; then	
 	echo "       $0 (start|stop|restart|status) postgresql"
 fi
 if test -x $MONGODB_SCRIPT; then
@@ -272,6 +272,10 @@ elif [ "x$1" = "xstatus" ]; then
         if test -x $APACHE_SCRIPT; then	
             $APACHE_SCRIPT status
         fi
+    elif [ "x$2" = "xmongodb" ]; then
+        if test -x $MONGODB_SCRIPT; then
+            $MONGODB_SCRIPT status
+        fi
     elif [ "x$2" = "git" ]; then
         if test -x $GIT_SCRIPT; then	
             $GIT_SCRIPT status
@@ -295,26 +299,8 @@ elif [ "x$1" = "xstatus" ]; then
         fi
     fi
 elif [ "x$1" = "xcleanpid" ]; then
-    if test -x $HYPERSONIC_SCRIPT; then
-        $HYPERSONIC_SCRIPT cleanpid
-    fi
-    if test -x $JBOSS_SCRIPT; then
-        $JBOSS_SCRIPT cleanpid
-    fi
-    if test -x $NAGIOS_SCRIPT; then
-        $NAGIOS_SCRIPT cleanpid
-    fi
-    if test -x $SUBVERSION_SCRIPT; then
-        $SUBVERSION_SCRIPT cleanpid
-    fi
     if test -x $APACHE_SCRIPT; then	
         $APACHE_SCRIPT cleanpid  
-    fi
-    if test -x $LUCENE_SCRIPT; then	
-        $LUCENE_SCRIPT cleanpid 
-    fi
-    if test -x $TOMCAT_SCRIPT; then
-        $TOMCAT_SCRIPT cleanpid
     fi
     if test -x $MYSQL_SCRIPT; then
         $MYSQL_SCRIPT cleanpid
@@ -322,9 +308,9 @@ elif [ "x$1" = "xcleanpid" ]; then
     if test -x $POSTGRESQL_SCRIPT; then
         $POSTGRESQL_SCRIPT cleanpid
     fi
-    if test -x $MEMCACHED_SCRIPT; then
-        $MEMCACHED_SCRIPT cleanpid
-    fi
+    #if test -x $MEMCACHED_SCRIPT; then
+    #    $MEMCACHED_SCRIPT cleanpid
+    #fi
 else
     help
     exit 1
