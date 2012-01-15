@@ -33,7 +33,7 @@ VERSION="1.0.0 Beta RC4"
 LOG="$PWD/opew-install.log"
 FILES="$PWD/opew-files.log"
 OPEW="/opt/"
-LINES=70380
+LINES=40867
 ERROR=0
 
 # check PATH environment variable
@@ -68,14 +68,15 @@ function _welcome(){
 	echo " "
 	echo "NOTICE: "
 	echo "This is a beta public release candidate just for testing and experimental proposals and some packages maybe expected to be broken."
+	echo "If you like OPEW, feel free to give me some feedback via <tomas@rijndael-project.com>. "
 	echo " "
 	read -p "Press enter to continue..."
 	echo " "
 	echo "OPEW is a complete, independent and extensible open distribution stack for GNU/Linux based OS."
-        echo "Its goal is to provides an easy and portable ready-to-run development environment focused on modern web programming languages. "
+        echo "Its goal is to provides a powerful and portable ready-to-run development environment focused on modern and robust (mainly web) programming languages. "
         echo "You can read more at the project page: <http://opew.sourceforge.net>"
 	echo " "
-	echo "OPEW provides the following open-source programming languages:"
+	echo "Using OPEW you can deploy natively with the following open-source programming languages:"
 	echo "- PHP "
 	echo "- Perl "
 	echo "- Python (experimental)"
@@ -87,17 +88,17 @@ function _welcome(){
 	echo "Also is provided the following open-source database management systems:"
 	echo "- MySQL "
 	echo "- PostgreSQL"
-	echo "- MongoDB (experimental)"
+	echo "- MongoDB"
 	echo "- SQLite3"
 	echo " "
 	read -p "Press enter to continue..."
 	echo "This script will install OPEW in this system ("`hostname`")" 
 	echo "This installer will check and prepare the system properly before install"
 	echo " "
-	echo "* You can take a look at the code behind this installer typing on the shell: "
-	echo '$ vi '$0' | head -n 739'
+	echo "* You can review the code behind this script installer simply typing: "
+	echo '$ vi '$0' | head -n 740'
 	echo "Or via web from the public Git repository: "
-	echo "https://raw.github.com/h2non/OPEW/master/bash/installer.sh "
+	echo "https://raw.github.com/h2non/OPEW/master/extra/scripts/installer.sh "
 	echo " "
 	echo "* Also, if you experiment any issue during the installation, please report it here:"
 	echo "http://github.com/h2non/opew/issues"
@@ -355,7 +356,7 @@ function _checkspace(){
         else 
 		echo "OK:"
 		echo "You have more than 786MB of free space available."
-		echo "After the OPEW installation you will have approximately about "$(((${SPACE}/1024)-786))" MB of free space available at $DISK partition."
+		echo "After the OPEW installation you will have approximately about "$(((${SPACE}/1024)-780))" MB of free space available at $DISK partition."
 	fi
 	echo " "
 }
@@ -363,18 +364,18 @@ function _checkspace(){
 function _preinstall(){
 	echo " "
 	echo "##############################################"
-	echo "Installation steps - 1. Installation path "
+	echo "Installation step - 1. Installation path "
 	echo " "
-	echo "OPEW will be installed by default in '/opt/opew'"
-	echo "NOTE: if install in /opt/opew, be sure have more than 1024MB of free space at /opt (maybe are inside in a separete disk partition)"
+	echo "OPEW will be installed by default in  '/opt/opew'"
+	echo "NOTE: be sure you have more than 786MB of free available space at the OPEW installation location partition, however, the installer checks it and notifies you if something went wrong."
 	echo " "
-	read -p "You wanna define an alternative installation path? (y/n): " response
+	read -p "If you want to install OPEW in a diferent path (not in '/opt/opew' by default), enter 'y', otherwise, enter anything (y/N): " response
 	case $response in
 		y|Y|yes|Yes|YES)
 		while : ; do
-			read -p "Please, enter the absolute new path (e.g /home or /usr): " newpath
+			read -p "Please, enter the absolute path (/home or /usr): " newpath
 			if [ -z "$newpath/opew" ] && [ -d "$newpath/opew" ]; then
-				echo "Invalid path o the directory already exists. Enter a new path... (CTRL+C to exit)"
+				echo "Invalid path o the directory already exists. Enter a new path... (CTRL+C to exit from the installer)"
                                	echo " "
 			else 
 				OPEW=$newpath"/"
@@ -398,12 +399,12 @@ function _preinstall(){
 function _usersinstall(){
 	echo " "
 	echo "##############################################"
-	echo "Installation step - 3. System users and groups"
+	echo "Installation step - 3. OPEW users and groups"
 	echo " "
-	echo "OPEW includes packages like Apache HTTP Server, MySQL and PostgreSQL DBMS thats by technical requirements and security recomendations needs to works with custom OS users with his own privileges."
+	echo "OPEW include servers like Apache HTTP Server, MySQL and PostgreSQL that by technical requirements and security stuffs need its respective user and group with custom OS privileges."
 	echo "In order to work properly with these packages, OPEW installer will create the following users and groups at this system:"
 	echo " "
-	echo "opew (general purpose OPEW user and group name)"
+	echo "opew (general purpose OPEW user and group)"
 	echo "opew_postgres (PostgreSQL DBMS user and group) "
 	echo "opew_mysql (MySQL DBMS user and group)"
 	echo "opew_httpd (Apache HTTP server user and group)"
@@ -504,9 +505,9 @@ function _usersinstall(){
                         esac
                 done
         echo " "
+	read -p "Press enter to continue... "
         done
 	fi 
-	read -p "Press enter to continue... "
 }
 
 function _license(){
@@ -517,7 +518,7 @@ function _license(){
 	echo "OPEW include a lot of diferent packages and programming languages with his respective license."
 	echo "You can see the all packages licenses at /opt/opew/licenses/ once OPEW will be installed. "
 	echo "OPEW project and his native code included of the authors or contributors is licensed under the GNU GPL 3.0 public license (if not see the code header). "
-	echo "You can read it at $newpath/opew/LICENSE"
+	echo "You can read it at $OPEW/licenses"
 	echo " "
 	read  -p "You accept the respetive packages licenses and the OPEW license?: (y/n) " response
 	 case $response in
@@ -539,14 +540,15 @@ function _license(){
 function _doinstall(){
 	echo " "
 	echo "##############################################"
-	echo "Installation step - 4. Install files." 
+	echo "Installation step - 4. Install data." 
 	echo " " 
 	echo "OPEW is ready to be installed."
 	echo " " 
-	read -p "Do you want to proceed finally installing OPEW in this system? (y/n): " response
+	read -p "Do you want to proceed to install OPEW at this system? (y/n): " response
 	case $response in
                 y|Y|yes|Yes|YES)
-		        echo "OK: continuning with the next installation step..."
+		        echo "OK: loading data..."
+			sleep 1
                 ;;
                 *)
                 echo " "
@@ -713,7 +715,7 @@ function _postinstall(){
 		echo "If you wanna use the OPEW environment variables, simply run:"
 		echo "/opt/opew/scripts/env_opew"
 		echo " "
-		echo "See README at '/opt/opew/' for more information and basic usage." 
+		echo "See README at '$OPEW/opew/' for more information and basic usage." 
 		echo " "
                 ;;
         esac
@@ -722,11 +724,11 @@ function _postinstall(){
 
 }
 
-# run welcome function
+# welcome message
 _welcome
 # show requirements message and other stuff
 _requirements
-# run a basic test requirements environment to prepare the new OPEW installation
+# run a basic test requirements environment to prepare the OPEW installation
 _testenv
 # run the preinstall process
 _preinstall
@@ -734,7 +736,7 @@ _preinstall
 _license
 # run usersinstall process
 _usersinstall
-# finally install
+# finally install data
 _doinstall
 # postinstall process
 _postinstall
