@@ -60,19 +60,19 @@ Later, just follow the installation steps.
 
 When OPEW was correctly installed you can start the services (HTTP Server, MySQL, PostgreSQL...) using the following script:
 
-```bash
+```
 # /opt/opew/scripts/opew (start|stop|restart|status) <service> 
 ```
 
 Get help about services availables
 
-```bash
+```
 # /opt/opew/scripts/opew help
 ```
 
 Use the OPEW enviroment variables for start development
 
-```bash
+```
 $ /opt/opew/scripts/env_opew
 ```
 
