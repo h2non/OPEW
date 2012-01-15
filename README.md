@@ -61,13 +61,45 @@ Later, just follow the installation steps.
 When OPEW was correctly installed you can start the services (HTTP Server, MySQL, PostgreSQL...) using the following script:
 
 ```bash
-/opt/opew/scripts/opew (start|stop|restart|status) <service> 
+# /opt/opew/scripts/opew (start|stop|restart|status) <service> 
 ```
 
-Services availables:
+Get help about services availables
 
 ```bash
-/opt/opew/scripts/opew help
+# /opt/opew/scripts/opew help
+```
+
+Use the OPEW enviroment variables for start development
+
+```bash
+$ /opt/opew/scripts/env_opew
+```
+
+Now, you can try to run directly, for example Ruby, Node.js or PHP binaries using the OPEW environment 
+
+```bash
+# PHP version example
+bash-4.1# php -v
+# Node.js version example
+bash-4.1# node -v
+# Ruby version example
+bash-4.1# ruby -v 
+# Python version example
+bash-4.1# python -v
+```
+
+Also (but still experimental) you can use its respective language package manager. Here an example
+
+```bash
+# Node.js NPM installation example
+bash-4.1# npm install socket.io
+# PHP Pecl installation example
+bash-4.1# pecl install radius
+# Ruby gems installation example
+bash-4.1# gem install rails
+# Python easy_install installation example
+bash-4.1# easy_install Django
 ```
 
 # Code
