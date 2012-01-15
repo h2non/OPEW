@@ -87,6 +87,6 @@ More info: <http://opew.sf.net>
 
 # Author
 
-OPEW was born in 2010 from an idea and personal project by Tomas Aparicio.
-OPEW is a personal another research project under continuous development and improvent. 
+OPEW was born in 2010 from an idea and personal project by Tomas Aparicio in order to supply some personal needs.
+OPEW is an one more another research project under continuous development and improvent. 
 
