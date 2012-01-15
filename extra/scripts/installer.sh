@@ -29,7 +29,7 @@
 #
 
 # config variables
-VERSION="1.0.0 Beta RC3"
+VERSION="1.0.0 Beta RC4"
 LOG="$PWD/opew-install.log"
 FILES="$PWD/opew-files.log"
 OPEW="/opt/opew"
@@ -67,7 +67,7 @@ function _welcome(){
 	echo "Version: $VERSION"
 	echo " "
 	echo "NOTICE: "
-	echo "This is an OPEW public release candidate still beta. Just for testing and experimental proposals, but expects to be broken."
+	echo "This is a beta public release candidate just for testing and experimental proposals and some packages maybe expected to be broken."
 	echo " "
 	read -p "Press enter to continue..."
 	echo " "
@@ -95,7 +95,7 @@ function _welcome(){
 	echo "This installer will check and prepare the system properly before install"
 	echo " "
 	echo "* You can take a look at the code behind this installer typing on the shell: "
-	echo '$ vi '$0' | head -n 720'
+	echo '$ vi '$0' | head -n 739'
 	echo "Or via web from the public Git repository: "
 	echo "https://raw.github.com/h2non/OPEW/master/bash/installer.sh "
 	echo " "
