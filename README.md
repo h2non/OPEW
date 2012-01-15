@@ -49,7 +49,7 @@ Get the latest OPEW release from <http://sourceforge.net/projects/opew/files/lat
 
 After it, simply do:
 
-```bash
+```
 $ chmod +x opew-1.0.*.bin
 # ./opew-1.0.*.bin
 ```
