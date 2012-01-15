@@ -1,9 +1,33 @@
+## IMPORTANT!
+**OPEW IS CURRENTLY UNDER CONTINUOUS DEVELOPMENT AND SOFTWARE ARCHITECTURE DESIGNING. 
+THIS IS JUST A PUBLIC TESTING RELEASE CANDIDATE FOR EXPERIMENTAL PROTOSALS AND 
+GIVEN SOME FEEDBACK FROM THE DEVELOPERS COMMUNITY. TEST IT AND MAIL ME ANY ISSUE, IDEAS, PROBLEMS YOU EXPERIMENT VIA <tomas@rijndael-project.com>**
+
 # About
 
 OPEW (Open Web Development Stack) is a complete, independent and extensible open distribution stack for GNU/Linux based OS. 
 Its goal is to provides an easy and portable ready-to-run development environment focused on modern web programming languages. 
 
-# Some features
+# Features
+
+## Languages
+
+* PHP 
+* Perl
+* Python `(experimental)`
+* Node.js
+* Ruby `(experimental)`
+* Go `(experimental)`
+* Lua `(experimental)`
+
+## Database management systems
+
+* MySQL 
+* PostgreSQL
+* SQLite
+* MongoDB
+
+## Features list
 
 * Much more than a LAMPP stack
 * Easy to install, extend, deploy and improve
@@ -19,13 +43,16 @@ Its goal is to provides an easy and portable ready-to-run development environmen
 * Well documented and tutorials 
 * Development tools for a fast setup project environment
 
+# Usage
+
+You can start some services (HTTP Server, MySQL, PostgreSQL...) via the "services" script located at:
+/opt/opew/scripts/opew 
+
 # Code
 
-This is the public git code repository of the OPEW project.
+All the code developed for the OPEW project should stay at the Git public repository <https://github.com/h2non/OPEW>.
 
-All the code developed for the OPEW project should stay here free-open sourced.
-
-Take a look at the [project site](http://opew.sourceforge.net) for more information and documentation
+Take a look at the [project site](http://opew.sf.net) for more information and documentation
 
 # Download
 
@@ -34,3 +61,4 @@ http://sourceforge.net/projects/opew/files/latest/download
 
 Take into account OPEW is a beta experimental version.
 An improved new release with all feature is coming soon... keep updated.
+More info: <http://opew.sf.net>
