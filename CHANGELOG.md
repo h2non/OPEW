@@ -11,6 +11,7 @@
   - phpMyAdmin upgraded to 3.4.9
   - OPEW services manager script improved
   - General stack improves (binaries execution environment and others)
+  - Added some instructions about getting started and usage
   - Installer script improved
 
 * `1.0.0 RC3` (28/12/2011)

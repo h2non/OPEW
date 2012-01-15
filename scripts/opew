@@ -182,7 +182,7 @@ elif [ "x$1" = "xstop" ]; then
             $MONGNDB_SCRIPT stop
             MONGODB_ERROR=$?
         fi
-		if test -x $GIT_SCRIPT; then
+	if test -x $GIT_SCRIPT; then
             $GIT_SCRIPT stop
             GIT_ERROR=$?
         fi
@@ -211,7 +211,14 @@ elif [ "x$1" = "xrestart" ]; then
             $APACHE_SCRIPT start
             APACHE_ERROR=$?
         fi
-    elif [ "x$2" = "xgit" ]; then
+   elif [ "x$2" = "xmongodb" ]; then
+        if test -x $MONGODB_SCRIPT; then
+            $MONGODB_SCRIPT stop
+            sleep 2
+            $MONGOD_SCRIPT start
+            MONGODB_ERROR=$?
+        fi 
+   elif [ "x$2" = "xgit" ]; then
         if test -x $GIT_SCRIPT; then	
             $GIT_SCRIPT stop  
             sleep 2
