@@ -5,7 +5,7 @@
 #
 # @license	GNU GPL 3.0
 # @author	Tomas Aparicio <tomas@rijndael-project.com>
-# @version	1.4 beta - 15/01/2012
+# @version	1.4 beta - 16/01/2012
 #
 # Copyright (C) 2011 - Tomas Aparicio
 #
@@ -609,7 +609,7 @@ function _postinstall(){
 	echo " "
 	sleep 2
 	# make symbolic link
-	if [ $OPEW != '/opt/opew' ]; then
+	if [ $OPEW != '/opt/' ]; then
 		echo -n "Post-install process: "
        		sleep 1
 		ln -s $OPEW"/opew" /opt/opew
