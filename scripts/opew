@@ -74,7 +74,7 @@ if test -x $GIT_SCRIPT; then
 fi
 
 echo " "
-echo "Take a look at the OPEW documentation via <http://opew.sf.net/docs> or locally <http://localhost(:port)/documentation/"
+echo "Take a look at the OPEW documentation via <http://opew.sf.net/docs> or locally <http://localhost(:port)/docs/"
 }
 
 if [ "x$1" = "xhelp" ] || [ "x$1" = "x" ]; then

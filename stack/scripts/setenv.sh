@@ -2,7 +2,7 @@
 #
 # OPEW - Open Web Development Stack
 # This script is a part of the OPEW project 
-# @package	setenv.sh
+# @package	stack/scripts/setenv.sh
 # @description	Set OPEW enviroment variables
 #
 
@@ -22,10 +22,14 @@ export MAGICK_CONFIGURE_PATH
 MAGICK_CODER_MODULE_PATH="/opt/opew/stack/common/lib/ImageMagick-6.5.8/modules-Q16/coders"
 export MAGICK_CODER_MODULE_PATH
 
+#### LDAP ENV ####
 LDAPCONF=/opt/opew/stack/common/etc/openldap/ldap.conf
 export LDAPCONF
+
 ##### PHP ENV #####
-		    
+#PHPRC=/opt/opew/stack/php/etc
+#export PHPRC		    
+
 ##### MYSQL ENV #####
 
 ##### APACHE ENV #####
@@ -39,6 +43,8 @@ PATH="/opt/opew/stack/perl/bin:$PATH"
 export PATH
 LD_LIBRARY_PATH="/opt/opew/stack/perl/lib:$LD_LIBRARY_PATH"
 export LD_LIBRARY_PATH
+PERL5LIB="/opt/opew/stack/perl/lib"
+export PERL5LIB
 
 #### GIT SCM ####
 PATH="/opt/opew/stack/gits/bin:$PATH"

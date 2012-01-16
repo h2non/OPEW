@@ -33,7 +33,7 @@ VERSION="1.0.0 Beta RC4"
 LOG="$PWD/opew-install.log"
 FILES="$PWD/opew-files.log"
 OPEW="/opt/"
-LINES=40861
+LINES=40862
 ERROR=0
 
 # check PATH environment variable
@@ -96,7 +96,7 @@ function _welcome(){
 	echo "This installer will check and prepare the system properly before install"
 	echo " "
 	echo "* You can review the code behind this script installer simply typing: "
-	echo '$ vi '$0' | head -n 742'
+	echo '$ vi '$0' | head -n 745'
 	echo "Or via web from the public Git repository: "
 	echo "https://raw.github.com/h2non/OPEW/master/extra/scripts/installer.sh "
 	echo " "
@@ -505,8 +505,8 @@ function _usersinstall(){
                         esac
                 done
         echo " "
-	read -p "Press enter to continue... "
         done
+	read -p "Press enter to continue... "
 	fi 
 }
 
@@ -620,10 +620,10 @@ function _postinstall(){
 	# global permissions
 	# TODO
 	# opew
-	chown -R root:root /opt/opew/scripts/ >> $LOG
+	chown -R root:root /opt/opew/scripts >> $LOG
 	chmod -R +x /opt/opew/scripts/ >> $LOG
 	if [ $? -eq 0 ]; then
-	echo "Assiged permissions to OPEW user..."
+	echo "Assiged execution permissions..."
 	else
 	echo "Error assigning OPEW user permissions"
 	echo "Run manually 'chown -R root:root /opt/opew/scripts'"
@@ -633,13 +633,12 @@ function _postinstall(){
 	sleep 0.5
 	# apache 
 	chown -R opew-httpd:opew-httpd /opt/opew/stack/apache2/htdocs >> $LOG
-	chown -R opew-httpd:opew-httpd /opt/opew/stack/php/tmp >> $LOG
-	#chown -R opew-httpd:opew-httpd /opt/opew/stack/apache2/logs >> $LOG
+	chown -R opew-httpd:opew-httpd /opt/opew/stack/apache2/logs/fastcgi >> $LOG
 	if [ $? -eq 0 ]; then
-	echo "Assigning permisssion to opew-httpd user..."
+	echo "Assigned permisssion to opew-httpd user and group..."
 	else
         echo "Error assigning opew-httpd user permissions"
-        echo "Run manually 'chown -R opew-httpd /opt/opew/stack/apache2/htdocs'"
+        echo "Run manually 'chown -R opew-httpd:opew-httpd /opt/opew/stack/apache2/logs/fastcgi'"
         echo " "
         sleep 2
         fi
@@ -648,7 +647,7 @@ function _postinstall(){
 	chown -R opew-mysql:opew-mysql /opt/opew/stack/mysql/data >> $LOG
 	chown -R opew-mysql:opew-mysql /opt/opew/stack/mysql/tmp >> $LOG
 	if [ $? -eq 0 ]; then
-	echo "Assigning permissions to opew-mysql user..."
+	echo "Assigned permissions to opew-mysql user and group..."
 	else
         echo "Error assigning MysQL permissions to /opt/opew/stack/mysql/data"
         echo "Run manually 'chown -R opew-mysql:opew-mysql /opt/opew/stack/mysql/data'"
@@ -661,7 +660,7 @@ function _postinstall(){
 	chown -R opew-postgres:opew-postgres /opt/opew/stack/postgresql/data >> $LOG
 	chown opew-postgres:opew-postgres /opt/opew/stack/postgresql/ >> $LOG
 	if [ $? -eq 0 ]; then
-	echo "Assigning permission to opew-postgres user..."
+	echo "Assigned permissions to opew-postgres user and group..."
 	else
         echo "Error assigning PostgreSQL permissions"
         echo "Run manually 'chown -R opew-postgres:opew-postgres /opt/opew/stack/postgres/data'"
@@ -694,24 +693,27 @@ function _postinstall(){
 			/opt/opew/scripts/opew start apache >> $LOG
 			sleep 1
 			echo " "
-			echo "The HTTP server is running! Try it with your web browser typing http://localhost or http://your-ip"
-			echo "Also, you can see the documentation typing http://localhost/docs"
+			echo "The HTTP server was started successfully! Try it with your web browser typing http://localhost or http://your-ip"
+			#echo "Also, you can see the documentation typing http://localhost/docs"
 			fi
                 ;;
                 *)
-		sleep 1
 		echo " "
-		echo "You can start the OPEW services running the following script."
+		;;
+	esac
+		echo " "
+		echo "You can start the OPEW services through the following script:"
 		echo "/opt/opew/scripts/opew (start|stop|restart|status) <service>"
 		echo " "
 		echo "List of available services: "
+		echo " "
 		echo "apache - Apache HTTP Server"
 		echo "mysql - MySQL Server"
 		echo "postgresql - PostgreSQL Server"
 		echo "mondodb - MongoDB Server"
 		echo "git - Git server daemon"
 		echo " "
-		echo "Also you can use the help for more information:"
+		echo "Also you get the help message typing:"
 		echo "/opt/opew/stack/opew help"
 		echo " "
 		echo "If you wanna use the OPEW environment variables, simply run:"
@@ -719,8 +721,6 @@ function _postinstall(){
 		echo " "
 		echo "See README at '$OPEW/opew/' for more information and basic usage." 
 		echo " "
-                ;;
-        esac
 
         echo "Thanks to try to use OPEW. Enjoy it!"
 
