@@ -8,3 +8,4 @@
 * FastCGI testing implementations for Perl, Ruby and Python
 * Packages manager testing
 * Improve and standarize ctl scripts
+* Recompile Git to support OPEW dynamic dependencies and libraries
