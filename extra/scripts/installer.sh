@@ -29,7 +29,7 @@
 #
 
 # config variables
-VERSION="1.0.0 Beta RC4"
+VERSION="1.0.0 Beta RC5"
 LOG="$PWD/opew-install.log"
 FILES="$PWD/opew-files.log"
 OPEW="/opt/"
@@ -41,7 +41,7 @@ if [ -z $PATH ]; then
 	echo "The PATH environment variable is empty. Cannot continue with the installation process..."
 	echo "Must be defined in order to run the installer properly. "
 	echo "Please, copy and ejecute this (or your customized PATH environment): " 
-	echo "export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+	echo 'export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 	exit 1
 fi
 
@@ -88,15 +88,16 @@ function _welcome(){
 	echo "Also is provided the following open-source database management systems:"
 	echo "- MySQL "
 	echo "- PostgreSQL"
-	echo "- MongoDB"
 	echo "- SQLite3"
+	echo "- MongoDB"
+	echo "- Redis"
 	echo " "
 	read -p "Press enter to continue..."
 	echo "This script will install OPEW in this system ("`hostname`")" 
 	echo "This installer will check and prepare the system properly before install"
 	echo " "
 	echo "* You can review the code behind this script installer simply typing: "
-	echo '$ vi '$0' | head -n 745'
+	echo '$ vi '$0' | head -n 746'
 	echo "Or via web from the public Git repository: "
 	echo "https://raw.github.com/h2non/OPEW/master/extra/scripts/installer.sh "
 	echo " "
@@ -123,7 +124,7 @@ function _requirements(){
 	echo " "
 	echo "* x64 based (64 bits) compatible processor"
 	echo "* Minimum of 256 MB of RAM"
-	echo "* Minimum of 768 MB of hard disk free space (so 1GB is recommended)"
+	echo "* Minimum of 512 MB of hard disk free space (so 1GB is recommended)"
 	echo "* At once a mininal GNU/Linux (64 bits) based OS"
 	echo "* TCP/IP protocol support" 
 	echo "* Root access level"
@@ -348,15 +349,15 @@ function _checkspace(){
 	echo "You have "$((${SPACE} / 1024))" MB ($PERCEN free) from total "$((${TOTAL} / 1024))" MB available space at the OPEW target installation partition ($DISK)."
 	echo " "
 	# check is lower than 786MB
-	if [ $SPACE -lt 798720 ]; then
+	if [ $SPACE -lt 524288 ]; then
 	        echo "ERROR:"
-		echo "OPEW needs at once 786MB of free space available."
+		echo "OPEW needs at once 512MB of free space available."
 		echo "You only have "$((${SPACE} / 1024))" MB of free available space at the target installation partition." 
 		_die "Cannot continue with the installation process..."
         else 
 		echo "OK:"
-		echo "You have more than 786MB of free space available."
-		echo "After the OPEW installation you will have approximately about "$(((${SPACE}/1024)-780))" MB of free space available at $DISK partition."
+		echo "You have more than 512MB of free space available."
+		echo "After the OPEW installation you will have approximately about "$(((${SPACE}/1024)-512))" MB of free space available at $DISK partition."
 	fi
 	echo " "
 }
@@ -367,7 +368,7 @@ function _preinstall(){
 	echo "Installation step - 1. Installation path "
 	echo " "
 	echo "OPEW will be installed by default in  '/opt/opew'"
-	echo "NOTE: be sure you have more than 786MB of free available space at the OPEW installation location partition, however, the installer checks it and notifies you if something went wrong."
+	echo "NOTE: be sure you have more than 512MB of free available space at the OPEW installation location partition, however, the installer checks it and notifies you if something went wrong."
 	echo " "
 	read -p "If you want to install OPEW in a diferent path (not in '/opt/opew' by default), enter 'y', otherwise, enter anything (y/N): " response
 	case $response in
