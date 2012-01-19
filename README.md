@@ -80,7 +80,7 @@ Get help about services availables
 # /opt/opew/scripts/opew help
 ```
 
-Use the OPEW enviroment variables for start development
+Use the OPEW enviroment to start development
 
 ```
 $ /opt/opew/scripts/env_opew
