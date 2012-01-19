@@ -445,7 +445,7 @@ function _usersinstall(){
 
 		# postgresql user 
 		if [ $i == 'opew-postgres' ]; then
-		useradd "$i" -b /opt/opew/postgresql -d /opt/opew/stack/postgresql -g "$i" -s /bin/sh -M >> $LOG
+		useradd "$i" -d /opt/opew/stack/postgresql -g "$i" -s /bin/sh -M >> $LOG
                 sleep 0.5
                 if [ $? -eq 0 ]; then
                         echo "created!"
@@ -458,7 +458,7 @@ function _usersinstall(){
 		else
 		# in other cases
 		#read -p "You can define a user password for security reasons. You want to do it? (y/n): " response
-		useradd "$i" -b /opt/opew/stack -d /opt/opew/stack -g "$i" -s /bin/false -M >> $LOG 
+		useradd "$i" -d /opt/opew/stack -g "$i" -s /bin/false -M >> $LOG 
 		sleep 0.5
 		if [ $? -eq 0 ]; then
 			echo "created!"
