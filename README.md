@@ -26,6 +26,7 @@ Its goal is to provides an powerful and portable ready-to-run development enviro
 * PostgreSQL
 * SQLite
 * MongoDB
+* Redis
 
 ## Features list
 
@@ -42,6 +43,15 @@ Its goal is to provides an powerful and portable ready-to-run development enviro
 * 64 bits support
 * Well documented and tutorials 
 * Development tools for a fast setup project environment
+
+# Requirements
+
+* x64 based (64 bits) compatible processor
+* At once a mininal GNU/Linux (64 bits) based OS
+* Minimum of 256 MB of RAM
+* Minimum of 768 MB of hard disk free space (so 1GB is recommended)
+* TCP/IP protocol support
+* Root access level
 
 # Installation
 

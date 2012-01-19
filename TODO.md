@@ -4,7 +4,7 @@
 
 * Add LibYAML support and recompile Ruby
 * Solve PHP extensions warnings
-* Upgrade Python to 3.x
+* Upgrade Python to 3.x and install setuptools (easy_install)
 * FastCGI testing implementations for Perl, Ruby and Python
 * Packages manager testing
 * Improve and standarize ctl scripts
