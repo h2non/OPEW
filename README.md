@@ -49,7 +49,7 @@ Its goal is to provides an powerful and portable ready-to-run development enviro
 * x64 based (64 bits) compatible processor
 * At once a mininal GNU/Linux (64 bits) based OS
 * Minimum of 256 MB of RAM
-* Minimum of 768 MB of hard disk free space (so 1GB is recommended)
+* Minimum of 512 MB of hard disk free space (so 1GB is recommended)
 * TCP/IP protocol support
 * Root access level
 
