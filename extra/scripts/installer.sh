@@ -29,7 +29,7 @@
 #
 
 # config variables
-VERSION="1.0.0 Beta RC5"
+VERSION="1.0.0 Beta RC4"
 LOG="$PWD/opew-install.log"
 FILES="$PWD/opew-files.log"
 OPEW="/opt/"
@@ -370,7 +370,7 @@ function _preinstall(){
 	echo "OPEW will be installed by default in  '/opt/opew'"
 	echo "NOTE: be sure you have more than 512MB of free available space at the OPEW installation location partition, however, the installer checks it and notifies you if something went wrong."
 	echo " "
-	read -p "If you want to install OPEW in a diferent path (not in '/opt/opew' by default), enter 'y', otherwise, enter anything (y/N): " response
+	read -p "If you want to install OPEW in a diferent path (not in '/opt/opew'), enter 'y' (y/N): " response
 	case $response in
 		y|Y|yes|Yes|YES)
 		while : ; do
