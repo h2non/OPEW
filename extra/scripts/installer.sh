@@ -589,12 +589,14 @@ function _doinstall(){
 			echo -n R | tr 'R' '\r'
 		fi
 
-		sleep 2
+		sleep 1
 		perbar=""
 		pernumlast=$pernum
 		nlines=`wc -l $FILES | awk '{ print $1; }'`
 		if [ $nlines -ge $LINES ]; then
-                        break
+                	echo "##################################################### (100%)"
+		        sleep 2
+			break
                 fi
 	done
 
