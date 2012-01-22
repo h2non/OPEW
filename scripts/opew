@@ -32,6 +32,7 @@ APACHE_SCRIPT=$OPEWDIR/apache2/scripts/ctl.sh
 MONGODB_SCRIPT=$OPEWDIR/mongodb/scripts/ctl.sh
 POSTGRESQL_SCRIPT=$OPEWDIR/postgresql/scripts/ctl.sh
 GIT_SCRIPT=$OPEWDIR/git/scripts/ctl.sh
+REDIS_SCRIPT=$OPEWDIR/redis/scripts/ctl.sh
 #MEMCACHED_SCRIPT=$OPEWDIR/memcached/scripts/ctl.sh
 
 help() {
@@ -52,6 +53,7 @@ apache     - Apache HTTP Server
 mysql      - MySQL Server
 postgresql - PostgreSQL Server
 mongodb    - MondoDB Server
+redis	   - Redis Server
 git        - Git SCM Server
 
 EOF
@@ -68,6 +70,9 @@ if test -x $POSTGRESQL_SCRIPT; then
 fi
 if test -x $MONGODB_SCRIPT; then
 	echo "       $0 (start|stop|restart|status) mongodb"
+fi
+if test -x $REDIS_SCRIPT; then
+        echo "       $0 (start|stop|restart|status) redis"
 fi
 if test -x $GIT_SCRIPT; then
 	echo "       $0 (start|stop|restart|status) git" 
@@ -101,6 +106,11 @@ elif [ "x$1" = "xstart" ]; then
             $APACHE_SCRIPT start  
             APACHE_ERROR=$?
         fi
+    elif [ "x$2" = "xredis" ]; then
+        if test -x $REDIS_SCRIPT; then
+            $REDIS_SCRIPT start
+            REDIS_ERROR=$?
+        fi
     elif [ "x$2" = "xgit" ]; then
         if test -x $GIT_SCRIPT; then	
             $GIT_SCRIPT start  
@@ -127,7 +137,10 @@ elif [ "x$1" = "xstart" ]; then
             $APACHE_SCRIPT start  
             APACHE_ERROR=$?
         fi
-		
+	if test -x $REDIS_SCRIPT; then
+            $REDIS_SCRIPT start
+            REDIS_ERROR=$?
+        fi	
         if test -x $GIT_SCRIPT; then	
             $GIT_SCRIPT start  
             GIT_ERROR=$?
@@ -160,6 +173,11 @@ elif [ "x$1" = "xstop" ]; then
             $APACHE_SCRIPT stop
             APACHE_ERROR=$?
         fi
+    elif [ "x$2" = "xredis" ]; then
+        if test -x $REDIS_SCRIPT; then
+            $REDIS_SCRIPT stop
+            REDIS_ERROR=$?
+        fi
     elif [ "x$2" = "xgit" ]; then
         if test -x $GIT_SCRIPT; then	
             $GIT_SCRIPT stop
@@ -178,9 +196,13 @@ elif [ "x$1" = "xstop" ]; then
             $POSTGRESQL_SCRIPT stop
             POSTGRESQL_ERROR=$?
         fi
-		if test -x $MONGODB_SCRIPT; then
+	if test -x $MONGODB_SCRIPT; then
             $MONGNDB_SCRIPT stop
             MONGODB_ERROR=$?
+        fi
+        if test -x $REDIS_SCRIPT; then
+            $REDIS_SCRIPT stop
+            REDIS_ERROR=$?
         fi
 	if test -x $GIT_SCRIPT; then
             $GIT_SCRIPT stop
@@ -218,6 +240,13 @@ elif [ "x$1" = "xrestart" ]; then
             $MONGOD_SCRIPT start
             MONGODB_ERROR=$?
         fi 
+   elif [ "x$2" = "xredis" ]; then
+        if test -x $REDIS_SCRIPT; then
+            $REDIS_SCRIPT stop
+            sleep 2
+            $REDIS_SCRIPT start
+            REDIS_ERROR=$?
+        fi
    elif [ "x$2" = "xgit" ]; then
         if test -x $GIT_SCRIPT; then	
             $GIT_SCRIPT stop  
@@ -250,8 +279,15 @@ elif [ "x$1" = "xrestart" ]; then
         if test -x $GIT_SCRIPT; then	
             $GIT_SCRIPT stop
             sleep 2
-            $git_SCRIPT start
+            $GIT_SCRIPT start
             GIT_ERROR=$?
+            sleep 2
+        fi
+        if test -x $REDIS_SCRIPT; then
+            $REDIS_SCRIPT stop
+            sleep 2
+            $REDIS_SCRIPT start
+            REDIS_ERROR=$?
             sleep 2
         fi
         if test -x $MONGODB_SCRIPT; then
