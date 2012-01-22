@@ -568,7 +568,7 @@ function _doinstall(){
 	mkdir $OPEW
 	fi
 	# tail from final and start uncompress
-	tail -n +$skip $0 | tar xvz -C $OPEW >> $FILES &
+	tail -n +$skip $0 | `tar xvz -C $OPEW >> $FILES` &
 
 	# process percentage info
 	perbar="#"
