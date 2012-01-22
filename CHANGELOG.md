@@ -2,11 +2,13 @@
 
 ## Beta
 
-* `1.0.0 RC5` (date not defined)
+* `1.0.0 RC5` (23/01/2012)
   - Added Redis 2.4.6 support including its PHP native extension (experimental)
   - Go binaries execution now works fine
-  - Python upgraded to 3.2.2
-  - Added LibYAML support for Ruby
+  - Python upgraded to 3.2.2 (still experimental)
+  - Node.js updated to 0.6.8	
+  - Ruby gem and rake now works fine (env problema)
+  - Added LibYAML 0.1.4 support for Ruby
 
 * `1.0.0 RC4` (15/01/2012)
   - Node.js upgraded to 0.6.7
@@ -31,7 +33,7 @@
 * `1.0.0 RC` - (02/11/2011)
   - Starting development and design for the new beta version
 
-## Pre-Beta 
+## Pre-Beta (<2010)	
 
 * `0.1.x` (obsolete)
 
