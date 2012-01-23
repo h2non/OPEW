@@ -5,7 +5,7 @@
 #
 # @license	GNU GPL 3.0
 # @author	Tomas Aparicio <tomas@rijndael-project.com>
-# @version	1.4 beta - 16/01/2012
+# @version	1.4 beta - 23/01/2012
 #
 # Copyright (C) 2011 - Tomas Aparicio
 #
@@ -29,11 +29,11 @@
 #
 
 # config variables
-VERSION="1.0.0 Beta RC4"
+VERSION="1.0.0 Beta RC5"
 LOG="$PWD/opew-install.log"
 FILES="$PWD/opew-files.log"
 OPEW="/opt/"
-LINES=40862
+LINES=47849
 ERROR=0
 
 # check PATH environment variable
@@ -714,7 +714,8 @@ function _postinstall(){
 		echo "mysql - MySQL Server"
 		echo "postgresql - PostgreSQL Server"
 		echo "mondodb - MongoDB Server"
-		echo "git - Git server daemon"
+		echo "git - Git Server daemon"
+		echo "redis- Redis Server"
 		echo " "
 		echo "Also you get the help message typing:"
 		echo "/opt/opew/stack/opew help"

@@ -4,6 +4,7 @@
 
 * `1.0.0 RC5` (23/01/2012)
   - Added Redis 2.4.6 support including its PHP native extension (experimental)
+  - Added PHPRedisAdmin 
   - Go binaries execution now works fine
   - Python upgraded to 3.2.2 (still experimental)
   - Node.js updated to 0.6.8	

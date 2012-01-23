@@ -123,11 +123,20 @@ Default OPEW services authentication credentials:
   - User: `postgres`
   - Password: `opewopew`
 
+# Author
+
+OPEW was born in 2010 from an idea and personal project by Tomas Aparicio <tomas@rijndael-project.com> in order to supply some personal development needs.
+OPEW become another research project under continuous development and improvent.
+
+# License
+
+OPEW native code is licensed under GNU GPL 3.0 
+OPEW includes a lot of packages with its respectives licenses. See the licenses/ directory for details.
+
 # Code
 
 All the code developed for the OPEW project should stay at the Git public repository <https://github.com/h2non/OPEW>.
-
-Take a look at the [project site](http://opew.sf.net) for more information and documentation
+Take a look at the [project site](http://opew.sf.net) for more information and documentation.
 
 # Download
 
@@ -137,9 +146,4 @@ http://sourceforge.net/projects/opew/files/latest/download
 Take into account OPEW is a beta experimental version.
 An improved new release with all feature is coming soon... keep updated.
 More info: <http://opew.sf.net>
-
-# Author
-
-OPEW was born in 2010 from an idea and personal project by Tomas Aparicio in order to supply some personal needs.
-OPEW is an one more another research project under continuous development and improvent. 
 

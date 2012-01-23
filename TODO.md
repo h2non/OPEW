@@ -9,3 +9,4 @@
 * Packages manager testing
 * Improve and standarize ctl scripts
 * Recompile Git to support OPEW dynamic dependencies and libraries
+* Ruby test with RoR and gems packages
