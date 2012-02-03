@@ -19,7 +19,7 @@ Its goal is to provides an powerful and portable ready-to-run development enviro
 * Ruby `(experimental)`
 * Go `(experimental)`
 * Lua `(experimental)`
-* TCL `(experimental)`
+* Tcl `(experimental)`
 
 ## Database management systems
 
@@ -33,7 +33,7 @@ Its goal is to provides an powerful and portable ready-to-run development enviro
 
 * Much more than a LAMPP stack
 * Easy to install, extend, deploy and improve
-* Full language support: PHP, Ruby, Python, Perl, Node.js, Go, TCL and Lua
+* Full language support: PHP, Ruby, Python, Perl, Node.js, Go, Tcl and Lua
 * Open source DBMS included: MySQL, PostgreSQL, MongoDB and SQLite
 * Native support for each language package manager 
 * Indepent and portable ready-to-run stack distribution
@@ -79,6 +79,12 @@ Get help about services availables
 
 ```
 # /opt/opew/scripts/opew help
+```
+
+Start coding creating a new project (beta)
+
+```
+# /opt/opew/scripts/new_project
 ```
 
 Use the OPEW enviroment to start development
@@ -129,7 +135,7 @@ Default OPEW services authentication credentials:
 
 # Author
 
-OPEW was born in 2010 from an idea and personal project by Tomas Aparicio <tomas@rijndael-project.com> in order to supply some personal development needs.
+OPEW was born in 2010 from an idea and personal project by Tomas Aparicio in order to supply some personal development needs.
 OPEW become another research project under continuous development and improvent.
 
 # License

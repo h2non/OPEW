@@ -7,6 +7,7 @@
   - Upgraded Node.js to 0.6.10	
   - Improved Redis server init script
   - Added TCL 8.5.11 language (experimental) 
+  - Added project setup utility script
 
 * `1.0.0 RC5` (23/01/2012)
   - Added Redis 2.4.6 support including its PHP native extension (experimental)
