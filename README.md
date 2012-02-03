@@ -33,7 +33,7 @@ Its goal is to provides an powerful and portable ready-to-run development enviro
 
 * Much more than a LAMPP stack
 * Easy to install, extend, deploy and improve
-* Fully language support: PHP, Ruby, Python, Perl, Node.js, Go (Lua and Opa under designing)
+* Full language support: PHP, Ruby, Python, Perl, Node.js, Go, TCL and Lua
 * Open source DBMS included: MySQL, PostgreSQL, MongoDB and SQLite
 * Native support for each language package manager 
 * Indepent and portable ready-to-run stack distribution
