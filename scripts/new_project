@@ -173,7 +173,7 @@ echo " "
 
 # Git repository
 read -p "Do you want to create or import a Git repository (y|N): " git
-if [z $git ]; then git=0=0 fi
+if [ -z $git ]; then git=0 fi
 if [ $git == "y" ] || [ $git == "Y" ]; then
 
 	read -p "Do you want to clone a repository (y|N): " clone
