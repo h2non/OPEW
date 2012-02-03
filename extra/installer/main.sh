@@ -5,9 +5,9 @@
 #
 # @license	GNU GPL 3.0
 # @author	Tomas Aparicio <tomas@rijndael-project.com>
-# @version	1.4 beta - 23/01/2012
+# @version	1.4 beta - 03/02/2012
 #
-# Copyright (C) 2011 - Tomas Aparicio
+# Copyright (C) 2012 - Tomas Aparicio
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@
 #
 
 # config variables
-VERSION="1.0.0 Beta RC5"
+VERSION="1.0.0 Beta RC6"
 LOG="$PWD/opew-install.log"
 FILES="$PWD/opew-files.log"
 OPEW="/opt/"
@@ -71,6 +71,7 @@ function _welcome(){
 	echo "If you like OPEW, feel free to give me some feedback via <tomas@rijndael-project.com>. "
 	echo " "
 	read -p "Press enter to continue..."
+	clear
 	echo " "
 	echo "OPEW is a complete, independent and extensible open distribution stack for GNU/Linux based OS."
         echo "Its goal is to provides a powerful and portable ready-to-run development environment focused on modern and robust (mainly web) programming languages. "
@@ -84,28 +85,30 @@ function _welcome(){
 	echo "- Node.js"
 	echo "- Go (experimental)"
 	echo "- Lua (experimental)"
+	echo "- TCL (experimental)"
 	echo " "
 	echo "Also is provided the following open-source database management systems:"
-	echo "- MySQL "
+	echo "- MySQL"
 	echo "- PostgreSQL"
 	echo "- SQLite3"
 	echo "- MongoDB"
 	echo "- Redis"
 	echo " "
 	read -p "Press enter to continue..."
+	echo " "
 	echo "This script will install OPEW in this system ("`hostname`")" 
 	echo "This installer will check and prepare the system properly before install"
 	echo " "
 	echo "* You can review the code behind this script installer simply typing: "
-	echo '$ vi '$0' | head -n 746'
+	echo '$ vi '$0' | head -n 753'
 	echo "Or via web from the public Git repository: "
-	echo "https://raw.github.com/h2non/OPEW/master/extra/scripts/installer.sh "
+	echo "https://raw.github.com/h2non/OPEW/master/extra/installer/main.sh "
 	echo " "
 	echo "* Also, if you experiment any issue during the installation, please report it here:"
 	echo "http://github.com/h2non/opew/issues"
 	echo " "
 	echo "This installer will generate the following both log files: "
-	echo "$LOG > Some output commands log about the installation process"
+	echo "$LOG > Output commands log from the installation process"
 	echo "$FILES > Installed files extraction log"
 	echo " "
 }
@@ -402,8 +405,11 @@ function _usersinstall(){
 	echo "##############################################"
 	echo "Installation step - 3. OPEW users and groups"
 	echo " "
-	echo "OPEW include servers like Apache HTTP Server, MySQL and PostgreSQL that by technical requirements and security stuffs need its respective user and group with custom OS privileges."
-	echo "In order to work properly with these packages, OPEW installer will create the following users and groups at this system:"
+	echo "OPEW include servers like Apache HTTP Server, MySQL and PostgreSQL" 
+	echo "that by technical requirements and security need its respective user"
+	echo "and group with custom OS privileges."
+	echo "In order to work properly with these packages, OPEW installer"
+	echo "will create the following users and groups at this system:"
 	echo " "
 	echo "opew (general purpose OPEW user and group)"
 	echo "opew_postgres (PostgreSQL DBMS user and group) "
@@ -516,12 +522,15 @@ function _license(){
 	echo "##############################################"
 	echo "Installation step - 2. License agreement"
 	echo " "
-	echo "OPEW include a lot of diferent packages and programming languages with his respective license."
-	echo "You can see the all packages licenses at $OPEW/licenses/ once OPEW will be installed. "
-	echo "OPEW project and his native code included of the authors or contributors is licensed under the GNU GPL 3.0 public license (if not see the code header). "
+	echo "OPEW include a lot of diferent packages and programming "
+	echo "languages with his respective license."
+	echo "You can see the all packages licenses at $OPEW/licenses/"
+	echo "once OPEW will be installed. "
+	echo "OPEW project and his native code included of the authors"
+	echo "or contributors is licensed under the GNU GPL 3.0 public license. "
 	echo "You can read it at $OPEW/licenses"
 	echo " "
-	read  -p "You accept the respetive packages licenses and the OPEW license?: (y/n) " response
+	read  -p "You accept licenses?: (y/n) " response
 	 case $response in
                 y|Y|yes|Yes|YES)
                 	echo "OK: continuning with the next installation step..."
@@ -529,7 +538,7 @@ function _license(){
                 ;;
                 *)
                 echo " "
-                echo "You must accept the terms. Can't continue. "
+                echo "You must accept the licenses. Can't continue. "
                 echo " "
 		exit 1
                 ;;
@@ -637,6 +646,7 @@ function _postinstall(){
 	# apache 
 	chown -R opew-httpd:opew-httpd /opt/opew/stack/apache2/htdocs >> $LOG
 	chown -R opew-httpd:opew-httpd /opt/opew/stack/apache2/logs/fastcgi >> $LOG
+	chown -R opew-httpd:opew-httpd /opt/opew/stack/php/tmp >> $LOG
 	if [ $? -eq 0 ]; then
 	echo "Assigned permisssion to opew-httpd user and group..."
 	else
@@ -721,7 +731,7 @@ function _postinstall(){
 		echo "/opt/opew/stack/opew help"
 		echo " "
 		echo "If you wanna use the OPEW environment variables, simply run:"
-		echo "/opt/opew/scripts/env_opew"
+		echo "/opt/opew/scripts/env"
 		echo " "
 		echo "See README at '$OPEW/opew/' for more information and basic usage." 
 		echo " "

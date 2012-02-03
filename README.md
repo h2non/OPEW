@@ -122,6 +122,9 @@ Default OPEW services authentication credentials:
 * PosgreSQL 
   - User: `postgres`
   - Password: `opewopew`
+* HTTP Auth
+ - User: `opew`
+ - Password: `opew`
 
 # Author
 

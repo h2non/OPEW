@@ -1,0 +1,6 @@
+#!/bin/sh
+
+PATH="/opt/opew/stack/php/bin:/opt/opew/stack/perl/bin:/opt/opew/stack/tcl/bin:/opt/opew/stack/go/bin:/opt/opew/stack/git/bin:/opt/opew/stack/lua/bin:/opt/opew/stack/python/bin:/opt/opew/stack/postgresql/bin:/opt/opew/stack/sqlite3/bin:/opt/opew/stack/mysql/bin:/opt/opew/stack/apache2/bin:/opt/opew/stack/common/bin:/opt/opew/stack/node/bin:/opt/opew/stack/mongodb/bin:/opt/opew/stack/ruby/bin:$PATH"
+MANPATH="/opt/opew/stack/node/share/man:/opt/opew/stack/tcl/man:/opt/opew/stack/ruby/share/man:/opt/opew/stack/go/share/man:/opt/opew/stack/lua/share/man:/opt/opew/stack/python/share/man:/opt/opew/stack/perl/share/man:/opt/opew/stack/apache2/share/man:/opt/opew/stack/php/share/man:/opt/opew/stack/python/share/man"
+exec /bin/bash --noprofile --norc
+                    

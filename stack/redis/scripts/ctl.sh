@@ -3,7 +3,6 @@
 # This script is part of the OPEW project <http://opew.sf.net>
 # 
 # Very simple init script for Redis server.
-# This script uses UNIX 'ps' tool command directly in order to get the process PID, not PID files
 # @see ../etc/redis.conf
 #
 #
@@ -15,8 +14,6 @@ EXEC="$OPEW/bin/redis-server"
 CLIEXEC="$OPEW/bin/redis-cli"
 CONF="$OPEW/etc/redis.conf"
 REDISPORT=`grep -E "^ *port +([0-9]+) *$" "$CONF" | grep -Eo "[0-9]+"`
-#PIDFILE=`grep -E "^ *pidfile +([a-z0-9/.]) *$" "$CONF" | grep -Eo "[a-z0-9/.]+"`
-#echo "PID FILE -> " $PIDFILE
 PIDFILE="$OPEW/redis.pid"
 LOG="$OPEW/log/redis_$REDISPORT.log"
 

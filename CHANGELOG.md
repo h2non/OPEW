@@ -2,6 +2,12 @@
 
 ## Beta
 
+* `1.0.0 RC6` (03/02/2012)
+  - Upgraded PHP to 5.3.10
+  - Upgraded Node.js to 0.6.10	
+  - Improved Redis server init script
+  - Added TCL 8.5.11 language (experimental) 
+
 * `1.0.0 RC5` (23/01/2012)
   - Added Redis 2.4.6 support including its PHP native extension (experimental)
   - Added PHPRedisAdmin 
@@ -10,6 +16,7 @@
   - Node.js updated to 0.6.8	
   - Ruby gem and rake now works fine (env problema)
   - Added LibYAML 0.1.4 support for Ruby
+  - Updated OPEW environment
 
 * `1.0.0 RC4` (15/01/2012)
   - Node.js upgraded to 0.6.7
