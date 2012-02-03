@@ -30,9 +30,9 @@ esac
 sleep 1
 echo " "
 
-echo -n "Stoping services... "
+echo "Stoping services... "
 /opt/opew/scripts/opew stop 
-echo "done!"
+echo " "
 
 echo -n "Removing users... "
 userdel opew
