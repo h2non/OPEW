@@ -590,7 +590,7 @@ function _doinstall(){
 	pernumlast=-1
 
 	while : ; do
-		pernum=`awk 'BEGIN { rounded = sprintf("%.0f", '$((${nlines}*42/${LINES}))'); print rounded }'`
+		pernum=`awk 'BEGIN { rounded = sprintf("%.0f", '$((${nlines}*50/${LINES}))'); print rounded }'`
 		count=0
 
 		while [ $count -lt $pernum ]; do
@@ -608,7 +608,7 @@ function _doinstall(){
 		pernumlast=$pernum
 		nlines=`wc -l $FILES | awk '{ print $1; }'`
 		if [ $nlines -ge $LINES ]; then
-                	echo "############################################## (100%)"
+                	echo "################################################ (100%)"
 		        sleep 2
 			break
                 fi

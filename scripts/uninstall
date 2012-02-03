@@ -1,0 +1,53 @@
+#!/bin/bash
+#
+# OPEW uninstaller
+# @description This utility script 
+# @license GNU GPL 3.0
+# @version Beta - 03/02/2012
+#
+
+# check if run as root
+if [ "`id -u`" -ne 0 ]; then
+       echo "ERROR: "
+       echo "You must run this script like a root user. You can't continue..."
+       exit 1
+fi
+
+echo "##################################"
+echo "        OPEW uninstaller "
+echo "##################################"
+echo " "
+read -p "Do you want to uninstall OPEW from this system? (y|N): " response
+case $response in
+	y|Y|yes|Yes|YES)
+		echo "Stating unintall process..."
+	;;
+ 	*)
+	echo "You select NO. Exiting."
+	exit 0
+	;;
+esac
+sleep 1
+echo " "
+
+echo -n "Stoping services... "
+/opt/opew/scripts/opew stop 
+echo "done!"
+
+echo -n "Removing users... "
+userdel opew
+userdel opew-httpd
+userdel opew-mysql
+userdel opew-postgres
+sleep 1
+echo "done!"
+
+echo -n "Removing files... "
+rm -rf /opt/opew
+sleep 1
+echo "done!"
+
+sleep 1
+echo " "
+echo "OPEW was uninstalled from this system."
+exit 0
