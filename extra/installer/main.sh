@@ -33,7 +33,7 @@ VERSION="1.0.0 Beta RC6"
 LOG="$PWD/opew-install.log"
 FILES="$PWD/opew-files.log"
 OPEW="/opt/"
-LINES=48753
+LINES=48754
 ERROR=0
 
 # check PATH environment variable
@@ -85,7 +85,7 @@ function _welcome(){
 	echo "- Node.js"
 	echo "- Go (experimental)"
 	echo "- Lua (experimental)"
-	echo "- TCL (experimental)"
+	echo "- Tcl (experimental)"
 	echo " "
 	echo "Also is provided the following open-source database management systems:"
 	echo "- MySQL"
@@ -100,7 +100,7 @@ function _welcome(){
 	echo "This installer will check and prepare the system properly before install"
 	echo " "
 	echo "* You can review the code behind this script installer simply typing: "
-	echo '$ vi '$0' | head -n 753'
+	echo '$ vi '$0' | head -n 756'
 	echo "Or via web from the public Git repository: "
 	echo "https://raw.github.com/h2non/OPEW/master/extra/installer/main.sh "
 	echo " "
@@ -217,7 +217,8 @@ function _testenv(){
                 echo "Take into account the new installation will turn inoperative the old OPEW installation."
                 echo "You should stop all of the services running at the old OPEW stack before continue with the new installation. "
                 echo " "
-                read -p "Do you want automatically stop all the services running at the OPEW old installation: (y/n) " response
+                read -p "Do you want automatically stop all the services running at the OPEW old installation: (Y/n) " response
+		if [ -z $response ]; then response=y; fi
                 if [ $response = "y" ] || [ $response = "Y" ]; then
                         if [ ! -x "/opt/opew/scripts/opew" ]; then
                                 _die "Can't ejecute the OPEW script to stop the services. Can't continue... "
@@ -227,8 +228,9 @@ function _testenv(){
                 fi
 
                 echo " "
-                read -p "Do you want automatically remove the symbolic link to the old OPEW installation? (just the symbolic link): (y/n) " response
-                if [ $response = "y" ] && [ $response = "Y"]; then
+                read -p "Do you want automatically remove the symbolic link to the old OPEW installation? (just the symbolic link): (Y/n) " response
+                if [ -z $response ]; then response=y; fi
+		if [ $response = "y" ] && [ $response = "Y"]; then
                         if test `rm -f "/opt/opew"` -eq 1 ; then
                                 _die "Cannot remove the symbolic link to the old OPEW installation path. Can't continue... "
                         else
@@ -248,7 +250,8 @@ function _testenv(){
 		echo "The new OPEW installation needs '/opt/opew' path free to work "
 		echo "You should move the old OPEW stack to other location to continue with the new installation"
 		echo " "
-		read -p "Do you want to stop all the services running at the OPEW old installation?: (y/n) " response
+		read -p "Do you want to stop all the services running at the OPEW old installation?: (Y/n) " response
+		if [ -z $response ]; then response=y; fi
 		if [ $response = "y" ] || [ $response = "Y" ]; then
 			if [ ! -x "/opt/opew/scripts/opew" ]; then
 				_die "Can't ejecute the OPEW script to stop the services. Can't continue... "
@@ -259,7 +262,8 @@ function _testenv(){
 		fi
 
 		echo " "
-		read -p "Do you want move the old OPEW to new location (p.e '/opt/opew_old'): (y/n) " response
+		read -p "Do you want move the old OPEW to new location (p.e '/opt/opew_old'): (Y/n) " response
+		if [ -z $response ]; then response=y; fi
 		if [ $response = "y" ] || [ $response = "Y"]; then
 			while : ; do
                         read -p "Please, enter the new location to move the old OPEW installation: " response
@@ -282,7 +286,8 @@ function _testenv(){
 		echo " "
 		echo "NOTICE:"
 		echo "Seems already file exists in /opt/opew. OPEW needs this path to work properly "
-		read -p "The file will should be deleted or moved. Do you want to deleted the file automatically: (y/n)" response
+		read -p "The file will should be deleted or moved. Do you want to deleted the file automatically: (Y/n)" response
+		if [ -z $response ]; then response=y; fi
 		if [ $response = "y" ] || [ $response = "Y"]; then
                         if [ ! `rm -f /opt/opew` ]; then
                         	_die "ERROR: can't delete the file '/opt/opew'. Delete or move it manually before continue and try again the installation... "
@@ -531,7 +536,7 @@ function _license(){
 	echo "You can read it at $OPEW/licenses"
 	echo " "
 	read  -p "You accept licenses?: (y/n) " response
-	 case $response in
+	case $response in
                 y|Y|yes|Yes|YES)
                 	echo "OK: continuning with the next installation step..."
 			echo " "
@@ -585,7 +590,7 @@ function _doinstall(){
 	pernumlast=-1
 
 	while : ; do
-		pernum=`awk 'BEGIN { rounded = sprintf("%.0f", '$((${nlines}*50/${LINES}))'); print rounded }'`
+		pernum=`awk 'BEGIN { rounded = sprintf("%.0f", '$((${nlines}*42/${LINES}))'); print rounded }'`
 		count=0
 
 		while [ $count -lt $pernum ]; do
@@ -603,7 +608,7 @@ function _doinstall(){
 		pernumlast=$pernum
 		nlines=`wc -l $FILES | awk '{ print $1; }'`
 		if [ $nlines -ge $LINES ]; then
-                	echo "##################################################### (100%)"
+                	echo "############################################## (100%)"
 		        sleep 2
 			break
                 fi
