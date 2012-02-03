@@ -33,7 +33,7 @@ VERSION="1.0.0 Beta RC6"
 LOG="$PWD/opew-install.log"
 FILES="$PWD/opew-files.log"
 OPEW="/opt/"
-LINES=47849
+LINES=48753
 ERROR=0
 
 # check PATH environment variable
