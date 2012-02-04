@@ -617,6 +617,7 @@ function _doinstall(){
 	sleep 1
 	echo " "
 	echo "OPEW was installed succesfully!"
+	sleep 2
 }
 
 function _postinstall(){
@@ -711,7 +712,8 @@ function _postinstall(){
 			/opt/opew/scripts/opew start apache >> $LOG
 			sleep 1
 			echo " "
-			echo "The HTTP server was started successfully! Try it with your web browser typing http://localhost or http://your-ip"
+			echo "The HTTP server was started successfully! "
+			echo "Try it with your web browser typing http://"`hostname`" or http://your-ip"
 			#echo "Also, you can see the documentation typing http://localhost/docs"
 			fi
                 ;;
@@ -738,10 +740,10 @@ function _postinstall(){
 		echo "If you wanna use the OPEW environment variables, simply run:"
 		echo "/opt/opew/scripts/env"
 		echo " "
-		echo "See README at '$OPEW/opew/' for more information and basic usage." 
+		echo "See README at '$OPEWopew/' for more information and getting started." 
 		echo " "
 
-        echo "Thanks to try to use OPEW. Enjoy it!"
+        echo "Thanks for try to use OPEW. Enjoy it!"
 
 }
 
