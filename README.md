@@ -90,7 +90,7 @@ Start coding creating a new project (beta)
 Use the OPEW enviroment to start development
 
 ```
-$ /opt/opew/scripts/env_opew
+$ /opt/opew/scripts/env
 ```
 
 Now, you can try to run directly, for example Ruby, Node.js or PHP binaries using the OPEW environment 
@@ -117,6 +117,12 @@ bash-4.1# pecl install radius
 bash-4.1# gem install rails
 # Python easy_install installation example
 bash-4.1# easy_install Django
+```
+
+You can uninstall OPEW running the following script:
+
+```
+# /opt/opew/scripts/uninstall 
 ```
 
 # Users authentication
