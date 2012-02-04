@@ -20,7 +20,9 @@ Lis of packages/libraries/programming languages and its version included on this
   - Redis `2.1.3`
 
 * Libraries/Packages
+  - Git
   - Curl `7.19.2`
+  - libcurl 
   - GD `2.0`
   - FreeType `2.3.7`
   - LDAP
@@ -34,3 +36,4 @@ Lis of packages/libraries/programming languages and its version included on this
   - LibXSLT `1.1.22`
   - zip `1.9.1`
   - zlib `1.2.3` 
+  - ImageMagick
