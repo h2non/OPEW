@@ -1,0 +1,2 @@
+
+echo "Simple script called"
