@@ -1,0 +1,72 @@
+#!/bin/bash
+# 
+# This code is a part of OPEW project <http://opew.sf.net>
+# @description 	Utility to make OPEW portable
+# @author	Tomas Aparicio <tomas@rijndael-project.com>
+# @license	GNU GPL 3.0
+# @version	Beta - 25/02/2012
+# 
+
+function installer
+{
+cat <<- _EOF_
+
+
+_EOF_
+}
+
+# check PATH environment variable
+if [ -z $PATH ]; then
+	echo "The PATH environment variable is empty. Cannot continue."
+	echo "Please, copy and ejecute this (or your customized PATH environment): " 
+	echo 'export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+	exit 1
+fi
+
+# check if run as root
+if [ "`id -u`" -ne 0 ];	then
+       	echo "ERROR: "
+	echo "You must run the installer like a root user. You can't continue..."
+       	exit 1
+fi
+
+read -p "Do you want to make OPEW portable? (y/n): " res
+case $res in
+y|Y|yes|YES|Yes) 
+	echo " "
+;;
+*)
+	echo "Exiting."
+	exit 0
+;;
+esac
+
+echo "Stopping services: "
+/opt/opew/scripts/opew stop
+echo " "
+
+echo "The script will create opew-portable-`date +%Y%m%d`.bin"
+
+while : ; do
+
+read -p "Output directory [$PWD]: " res
+if [ -z $res ]; then
+ DIR="$PWD"
+ echo "Default folder: $PWD"
+ break
+else if [ -d $res ]; then
+ DIR="$res"
+ break
+else if [ $res == 'x']; then
+ echo "Exiting."
+ exit 0
+else
+ echo "Invalid folder. Please try again or enter 'x' for exit."
+fi
+
+done
+
+echo "Starting packing and compression..."
+PID=`tar xzvf $DIR/opew-portable-$(date +%Y%m%d).tar.gz /opt/opew > opew-files.log` &
+
+
