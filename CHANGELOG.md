@@ -2,6 +2,19 @@
 
 ## Beta
 
+* `1.0.1` (13/05/2012)
+  - Upgraded PHP to 5.3.13
+  - Upgraded Go to 1.0.1 (stable release)
+  - Upgraded Node.js to 0.6.17
+  - Upgraded phpMyAdmin 3.5.1
+  - Upgraded phpPgAdmin to 5.0.4
+  - Removed the TCL language 
+  - Added `make_portable` script utility
+  - Fixed sintax error on `new_project` script
+  - Fixed error on `opew` services manager script 
+  - Added default support for oAuth PHP module
+  - Full support for PECL extensions installation
+
 * `1.0.0 RC6` (04/02/2012)
   - Upgraded PHP to 5.3.10
   - Upgraded Node.js to 0.6.10	

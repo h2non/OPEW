@@ -197,7 +197,7 @@ elif [ "x$1" = "xstop" ]; then
             POSTGRESQL_ERROR=$?
         fi
 	if test -x $MONGODB_SCRIPT; then
-            $MONGNDB_SCRIPT stop
+            $MONGODB_SCRIPT stop
             MONGODB_ERROR=$?
         fi
         if test -x $REDIS_SCRIPT; then
@@ -237,7 +237,7 @@ elif [ "x$1" = "xrestart" ]; then
         if test -x $MONGODB_SCRIPT; then
             $MONGODB_SCRIPT stop
             sleep 2
-            $MONGOD_SCRIPT start
+            $MONGODB_SCRIPT start
             MONGODB_ERROR=$?
         fi 
    elif [ "x$2" = "xredis" ]; then
@@ -293,7 +293,7 @@ elif [ "x$1" = "xrestart" ]; then
         if test -x $MONGODB_SCRIPT; then
             $MONGNDB_SCRIPT stop
             sleep 2
-            $MONGNDB_SCRIPT start
+            $MONGODB_SCRIPT start
             MONGODB_ERROR=$?
             sleep 2
         fi
