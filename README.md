@@ -19,7 +19,6 @@ Its goal is to provides an powerful and portable ready-to-run development enviro
 * Ruby `(experimental)`
 * Go `(experimental)`
 * Lua `(experimental)`
-* Tcl `(experimental)`
 
 ## Database management systems
 
