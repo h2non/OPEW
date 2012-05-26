@@ -12,12 +12,12 @@ Its goal is to provides an powerful and portable ready-to-run development enviro
 
 ## Languages
 
-* PHP 
-* Perl
+* PHP `(stable)`
+* Perl `(stable)`
 * Python `(experimental)`
-* Node.js
+* Node.js `(stable)`
 * Ruby `(experimental)`
-* Go `(experimental)`
+* Go `(stable)`
 * Lua `(experimental)`
 
 ## Database management systems
@@ -31,18 +31,19 @@ Its goal is to provides an powerful and portable ready-to-run development enviro
 ## Features list
 
 * Much more than a LAMPP stack
-* Easy to install, extend, deploy and improve
-* Full language support: PHP, Ruby, Python, Perl, Node.js, Go, Tcl and Lua
-* Open source DBMS included: MySQL, PostgreSQL, MongoDB and SQLite
+* Apache and Nginx HTTP servers
+* Easy to install, manage, deploy and improve
+* Languages supported: PHP, Ruby, Python, Perl, Node.js, Go and Lua
+* Data management servers: MySQL, PostgreSQL, MongoDB, Redis and SQLite
 * Native support for each language package manager 
-* Indepent and portable ready-to-run stack distribution
-* Git SCM and web code revision tools included
-* FastCGI support for Apache handling
+* Full indepent and portable ready-to-run stack distribution
+* Git SCM and web code revision tools
+* Memcached support
+* FastCGI support for Apache handling 
 * phpMyAdmin, phpPgAdmin, phpSQLiteAdmin and phpMoAdmin
-* Addons extensible 
-* 64 bits support
-* Well documented and tutorials 
-* Development tools for a fast setup project environment
+* 64 bits support (only)
+* Focused on web developers
+* Include tools for a fast setup project environment
 
 # Requirements
 
@@ -141,7 +142,7 @@ Default OPEW services authentication credentials:
 # Author
 
 OPEW was born in 2010 from an idea and personal project by Tomas Aparicio in order to supply some personal development needs.
-OPEW become another research project under continuous development and improvent.
+OPEW become another research project under continuous development and improvement.
 
 # License
 

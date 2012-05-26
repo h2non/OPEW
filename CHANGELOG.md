@@ -2,6 +2,15 @@
 
 ## Beta
 
+* `1.0.2` (02/06/2012)
+  - Upgraded Node.js to 0.6.18
+  - Added Nginx 1.0.10 (experimental)
+  - Added Memcached 1.4.13
+  - Solved services management script error (`opew`)
+  - Improves on OPEW management Bash scripts
+  - Added PCRE with full support (dev)
+  - New libraries: Libmemcached 1.0.8 and Libevent 2.0.19
+
 * `1.0.1` (13/05/2012)
   - Upgraded PHP to 5.3.13
   - Upgraded Go to 1.0.1 (stable release)

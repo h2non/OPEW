@@ -1,17 +1,16 @@
 # TODO List
 
-`1.1.0 Beta`
-
 * Add PHP support for Bzip2
-* Test TCL packages
 * Solve MongoDB C OS level shared libraries errors (libc and libthead)
-* Python 3.x easy_install support
-* Solve Python 3.x problems
-* FastCGI testing implementations for Perl, Ruby, TCL, Node.js and Python
-* Packages manager testing
+* Add Drizzle DBMS support
+* More Bash utility scripts and improve the existent
+* Nginx testing
+* Standarize Bash `ctl` scripts
+* Upgrade Python to 3.x 
+* FastCGI testing for Nginx 
+* Ruby language and gem full support 
 * Project documentation
-* Sample project (partially done)
+* Complete support for custom install path
 * New project bash script (improve)
 * Improve and standarize ctl scripts
 * Recompile Git to support OPEW dynamic dependencies and libraries (partially done)
-* Ruby test with RoR and gems packages
