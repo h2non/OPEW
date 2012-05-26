@@ -2,7 +2,7 @@
 
 ## Beta
 
-* `1.0.2` (02/06/2012)
+* `1.0.2` (26/05/2012)
   - Upgraded Node.js to 0.6.18
   - Added Nginx 1.0.10 (experimental)
   - Added Memcached 1.4.13
