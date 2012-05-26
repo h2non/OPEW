@@ -18,7 +18,7 @@ prog=git-daemon
 start () {
 	if [ ! -f $PID ]; then
 
-	echo -n "Starting $prog: "
+	echo -n "$0 : Starting $prog: "
 
     	# start daemon
     	$DAEMON $ARGS >> /opt/opew/stack/git/git-daemon.log
@@ -27,7 +27,7 @@ start () {
 	sleep 1
     	echo -n "done!\n"
     	else 
-		echo "Git is already running!"
+		echo "$0 : Git is already running!"
 	fi
 	return $RETVAL
 }
@@ -36,7 +36,7 @@ stop () {
     # stop daemon
     if [ -f $PID ]; then
     	kill `cat $PID`
-	echo -n "Stopping $prog: "
+	echo -n "$0 : Stopping $prog: "
 	RETVAL=$?
 
     	if [ $RETVAL = 0 ]; then
@@ -45,7 +45,7 @@ stop () {
 		echo -n "done!\n"
    	fi
     else 
-	echo -n "Git is not running!\n" 
+	echo -n "$0 : Git is not running!\n" 
     fi
 }
 

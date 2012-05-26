@@ -16,12 +16,12 @@ RETVAL=0
 
 start() {
 	if [ ! -f /opt/opew/stack/mongodb/data/*.lock ]; then
-	echo -n "Starting mongodb: "
+	echo -n "$0 : Starting mongodb: "
 	$mongod --config /opt/opew/stack/mongodb/etc/mongodb.conf 2>&1 >>/opt/opew/stack/mongodb/log/mongodb.log
 	sleep 1
         echo -n " done!"
 	else 
-	echo -n "mongodb is already running with PID "`cat /opt/opew/stack/mongodb/data/*.lock`
+	echo -n "$0 : mongodb is already running with PID "`cat /opt/opew/stack/mongodb/data/*.lock`
 	fi
 	RETVAL=$?
 	echo
@@ -31,21 +31,20 @@ start() {
 
 stop() {
 	if [ -f /opt/opew/stack/mongodb/data/*.lock ]; then
-	echo -n "Stopping mongodb: "
+	echo -n "$0 : Stopping mongodb: "
 	kill `cat /opt/opew/stack/mongodb/data/*.lock`
 	else 
-	echo -n "mondodb is NOT running"
+	echo -n "$0 : mondodb is NOT running"
 	fi
 	RETVAL=$?
 	sleep 1
-	echo -n " done!"
 	echo
 	[ $RETVAL -eq 0 ] && rm -f /opt/opew/stack/mongodb/data/$prog
 	return $RETVAL
 }
 
 reload() {
-	echo -n $"Reloading mongodb: "
+	echo -n "$0 : Reloading mongodb: "
 	killall $prog -HUP
 	RETVAL=$?
 	echo
@@ -74,9 +73,9 @@ case "$1" in
 		;;
 	status)
 		if [ -f /opt/opew/stack/mongodb/data/$prog ]; then
-			echo "mongodb is running"
+			echo "$0 : mongodb is running"
 		else
-			echo "mongodb is NOT running"
+			echo "$0 : mongodb is NOT running"
 		fi
 		RETVAL=$?
 		;;

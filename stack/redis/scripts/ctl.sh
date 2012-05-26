@@ -21,26 +21,25 @@ case "$1" in
     start)
         if [ -f $PIDFILE ]
 	then
-                echo "Redis is already running..."
+                echo "$0 : Redis is already running..."
         else
-                echo -n "Starting Redis server on port $REDISPORT..."
+                echo -n "$0 : Starting Redis server on port $REDISPORT..."
                 `$EXEC $CONF >> $LOG` & 
 		sleep 1
-		echo " done!"
-		echo "You can see the output log in: $LOG"
+		echo " done! You can see the output log in: $LOG"
         fi
         ;;
     stop)
 	if [ ! -f $PIDFILE ]
         then
-                echo "Redis is not running..."
+                echo "$0 : Redis is not running..."
         else
 		PID=$(cat $PIDFILE)
-		echo -n "Stopping ... "
+		echo -n "$0 : Stopping... "
                 $CLIEXEC -p $REDISPORT shutdown
                 while [ -x /proc/${PID} ]
                 do
-                    echo -n "Waiting for Redis to shutdown ..."
+                    echo -n "Waiting for Redis to shutdown... "
                     sleep 1
 		    kill -9 $PID 
                 done
@@ -56,7 +55,7 @@ case "$1" in
 
       	;;
     *)
-        echo "Please use (start|stop|restart) as first argument"
+        echo "Usage: $0 (start|stop|restart)"
         ;;
 esac
 
