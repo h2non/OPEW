@@ -33,7 +33,8 @@ MONGODB_SCRIPT=$OPEWDIR/mongodb/scripts/ctl.sh
 POSTGRESQL_SCRIPT=$OPEWDIR/postgresql/scripts/ctl.sh
 GIT_SCRIPT=$OPEWDIR/git/scripts/ctl.sh
 REDIS_SCRIPT=$OPEWDIR/redis/scripts/ctl.sh
-#MEMCACHED_SCRIPT=$OPEWDIR/memcached/scripts/ctl.sh
+MEMCACHED_SCRIPT=$OPEWDIR/memcached/scripts/ctl.sh
+NGINX_SCRIPT=$OPEWDIR/nginx/scripts/ctl.sh
 
 help() {
 	cat <<EOF
@@ -50,11 +51,13 @@ status     - show the status of the service(s)
 
 Services:
 apache     - Apache HTTP Server
+nginx 	   - Nginx HTTP Server
 mysql      - MySQL Server
 postgresql - PostgreSQL Server
 mongodb    - MondoDB Server
 redis	   - Redis Server
 git        - Git SCM Server
+memcached  - Memcached Server
 
 EOF
 
@@ -116,6 +119,16 @@ elif [ "x$1" = "xstart" ]; then
             $GIT_SCRIPT start  
             GIT_ERROR=$?
         fi
+    elif [ "x$2" = "xmemcached" ]; then
+        if test -x $MEMCACHED_SCRIPT; then
+            $MEMCACHED_SCRIPT start
+            MEMCACHED_ERROR=$?
+        fi
+    elif [ "x$2" = "xnginx" ]; then
+        if test -x $NGINX_SCRIPT; then
+            $NGINX_SCRIPT start
+            NGINX_ERROR=$?
+        fi
     else
         if test -x $MYSQL_SCRIPT; then
             $MYSQL_SCRIPT start
@@ -132,7 +145,6 @@ elif [ "x$1" = "xstart" ]; then
             POSTGRESQL_ERROR=$?
             sleep 5
         fi
-		
         if test -x $APACHE_SCRIPT; then	
             $APACHE_SCRIPT start  
             APACHE_ERROR=$?
@@ -144,6 +156,14 @@ elif [ "x$1" = "xstart" ]; then
         if test -x $GIT_SCRIPT; then	
             $GIT_SCRIPT start  
             GIT_ERROR=$?
+        fi
+	if test -x $MEMCACHED_SCRIPT; then
+            $MEMCACHED_SCRIPT start
+            MEMCACHED_ERROR=$?
+        fi
+	if test -x $NGINX_SCRIPT; then
+            $NGINX_SCRIPT start
+            NGINX_ERROR=$?
         fi
     fi
 
@@ -183,6 +203,16 @@ elif [ "x$1" = "xstop" ]; then
             $GIT_SCRIPT stop
             GIT_ERROR=$?
         fi
+    elif [ "x$2" = "xmemcached" ]; then
+        if test -x $MEMCACHED_SCRIPT; then
+            $MEMCACHED_SCRIPT stop
+            MEMCACHED_ERROR=$?
+        fi
+    elif [ "x$2" = "xnginx" ]; then
+        if test -x $NGINX_SCRIPT; then
+            $NGINX_SCRIPT stop
+            NGINX_ERROR=$?
+        fi
     else
         if test -x $APACHE_SCRIPT; then	
             $APACHE_SCRIPT stop  
@@ -207,6 +237,14 @@ elif [ "x$1" = "xstop" ]; then
 	if test -x $GIT_SCRIPT; then
             $GIT_SCRIPT stop
             GIT_ERROR=$?
+        fi
+	if test -x $MEMCACHED_SCRIPT; then
+            $MEMCACHED_SCRIPT stop
+            MEMCACHED_ERROR=$?
+        fi
+	if test -x $NGINX_SCRIPT; then
+            $NGINX_SCRIPT stop
+            NGINX_ERROR=$?
         fi
     fi
 
@@ -254,6 +292,20 @@ elif [ "x$1" = "xrestart" ]; then
             $GIT_SCRIPT start
             GIT_ERROR=$?
         fi
+   elif [ "x$2" = "xmemcached" ]; then
+        if test -x $MEMCACHED_SCRIPT; then
+            $MEMCACHED_SCRIPT stop
+            sleep 2
+            $MEMCACHED_SCRIPT start
+            MEMCACHED_ERROR=$?
+        fi
+   elif [ "x$2" = "xnginx" ]; then
+        if test -x $NGINX_SCRIPT; then
+            $NGINX_SCRIPT stop
+            sleep 2
+            $NGINX_SCRIPT start
+            NGINX_ERROR=$?
+        fi
     else
         if test -x $APACHE_SCRIPT; then	
             $APACHE_SCRIPT stop
@@ -297,6 +349,20 @@ elif [ "x$1" = "xrestart" ]; then
             MONGODB_ERROR=$?
             sleep 2
         fi
+        if test -x $MEMCACHED_SCRIPT; then
+            $MEMCACHED_SCRIPT stop
+            sleep 2
+            $MEMCACHED_SCRIPT start
+            MEMCACHED_ERROR=$?
+            sleep 2
+        fi
+        if test -x $NGINX_SCRIPT; then
+            $NGINX_SCRIPT stop
+            sleep 2
+            $NGINX_SCRIPT start
+            NGINX_ERROR=$?
+            sleep 2
+        fi
     fi
 
 elif [ "x$1" = "xstatus" ]; then
@@ -319,9 +385,17 @@ elif [ "x$1" = "xstatus" ]; then
         if test -x $MONGODB_SCRIPT; then
             $MONGODB_SCRIPT status
         fi
-    elif [ "x$2" = "git" ]; then
+    elif [ "x$2" = "xgit" ]; then
         if test -x $GIT_SCRIPT; then	
             $GIT_SCRIPT status
+        fi
+    elif [ "x$2" = "xmemcached" ]; then
+        if test -x $MEMCACHED_SCRIPT; then
+            $MEMCACHED_SCRIPT status
+        fi
+    elif [ "x$2" = "xnginx" ]; then
+        if test -x $NGINX_SCRIPT; then
+            $NGINX_SCRIPT status
         fi
     else
         if test -x $APACHE_SCRIPT; then	
@@ -340,6 +414,12 @@ elif [ "x$1" = "xstatus" ]; then
         if test -x $MONGODB_SCRIPT; then
             $MONGODB_SCRIPT status
         fi
+	if test -x $NGINX_SCRIPT; then
+            $NGINX_SCRIPT status
+        fi
+	if test -x $MEMCACHED_SCRIPT; then
+            $MEMCACHED_SCRIPT status
+        fi
     fi
 elif [ "x$1" = "xcleanpid" ]; then
     if test -x $APACHE_SCRIPT; then	
@@ -351,16 +431,19 @@ elif [ "x$1" = "xcleanpid" ]; then
     if test -x $POSTGRESQL_SCRIPT; then
         $POSTGRESQL_SCRIPT cleanpid
     fi
-    #if test -x $MEMCACHED_SCRIPT; then
-    #    $MEMCACHED_SCRIPT cleanpid
-    #fi
+    if test -x $MEMCACHED_SCRIPT; then
+        $MEMCACHED_SCRIPT cleanpid
+    fi
+    if test -x $NGINX_SCRIPT; then
+        $NGINX_SCRIPT cleanpid
+    fi
 else
     help
     exit 1
 fi
 
 # Checking for errors
-for e in $APACHE_ERROR $MYSQL_ERROR $POSTGRESQL_ERROR $MONGODB_ERROR $GIT_ERROR ; do
+for e in $APACHE_ERROR $MYSQL_ERROR $POSTGRESQL_ERROR $MONGODB_ERROR $GIT_ERROR $NGINX_ERROR $MEMCACHED_ERROR; do
     if [ $e -gt 0 ]; then
         ERROR=$e
     fi
